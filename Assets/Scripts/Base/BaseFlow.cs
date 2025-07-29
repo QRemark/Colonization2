@@ -16,15 +16,19 @@ public class BaseFlow : MonoBehaviour
     private readonly List<Unit> _subscribedUnits = new();
     private List<Resource> _availableResources = new();
 
-    public void Init(UnitSpawner unitSpawner, ResourceStorage resourceStorage)
+    private Base _base;
+
+    public void Init(UnitSpawner unitSpawner, ResourceStorage resourceStorage, Base baseRef)
     {
         _unitSpawner = unitSpawner;
         _resourceStorage = resourceStorage;
+        _base = baseRef;
 
         _assigner.Init(_activeTasks, _resourceStorage);
         _resourceUI.Initialize(_resourceCounter);
         _scanner.ResourcesUpdated += OnResourcesUpdated;
     }
+
 
     private void OnDestroy()
     {
@@ -48,14 +52,18 @@ public class BaseFlow : MonoBehaviour
             .Where(resource => _resourceStorage.AvailableResources.Contains(resource))
             .ToList();
 
-        _assigner.AssignTasks(_unitSpawner.Units, _availableResources);
+        var ownUnits = _unitSpawner.Units
+            .Where(unit => unit.GetAssignedBase() == _base)
+            .ToList();
+
+        _assigner.AssignTasks(ownUnits, _availableResources);
     }
 
     private void CheckUnits()
     {
         foreach (Unit unit in _unitSpawner.Units)
         {
-            if (!_subscribedUnits.Contains(unit))
+            if (!_subscribedUnits.Contains(unit) && unit.GetAssignedBase() == this.GetComponent<Base>())
             {
                 unit.ResourceDelivered += OnUnitDelivered;
                 _subscribedUnits.Add(unit);
@@ -65,9 +73,13 @@ public class BaseFlow : MonoBehaviour
 
     private void OnUnitDelivered(Unit unit, Resource resource)
     {
+        if (unit.GetAssignedBase() != this.GetComponent<Base>())
+            return; 
+
         _activeTasks.Remove(resource);
         _resourceStorage.UnregisterResource(resource);
         _resourceCounter.Increment();
         resource.Collect();
     }
+
 }

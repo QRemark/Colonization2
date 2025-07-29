@@ -12,7 +12,7 @@ public class Base : MonoBehaviour
 
     public void Init(UnitSpawner unitSpawner, ResourceStorage resourceStorage, GlobalUnitHandler globalUnitHandler, BaseManager baseManager)
     {
-        _flow.Init(unitSpawner, resourceStorage);
+        _flow.Init(unitSpawner, resourceStorage, this);
 
         _unitExpansion.Init(this, _resourceCounter, globalUnitHandler);
         _baseExpansion.Init(this, _resourceCounter, globalUnitHandler, baseManager);

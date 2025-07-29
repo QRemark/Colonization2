@@ -643,7 +643,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefab: {fileID: 5537163490449121910, guid: a8fd705d8f30773498acbeabc0229060, type: 3}
   _parentPosition: {fileID: 1604258032}
-  _initialSize: 20
+  _initialSize: 100
   _spawnRadius: 20
   _angleStepDegrees: 90
   _yOffset: 0
@@ -1009,9 +1009,9 @@ MonoBehaviour:
   _prefab: {fileID: 2364068691362051382, guid: 07276d3f2094a5243aeb30e01c48a7bc, type: 3}
   _parentPosition: {fileID: 1738240518}
   _initialSize: 100
-  _spawnInterval: 0.1
+  _spawnInterval: 1
   _innerRadius: 40
-  _outerRadius: 100
+  _outerRadius: 150
   _spawnYOffcet: 20
   _spawnCenter: {fileID: 1221934813}
   _resourceStorage: {fileID: 1738240519}
