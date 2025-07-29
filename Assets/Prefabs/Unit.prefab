@@ -154,6 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _baseSpeed: 25
+  _arriveThreshold: 6
 --- !u!54 &1972032819687030808
 Rigidbody:
   m_ObjectHideFlags: 0

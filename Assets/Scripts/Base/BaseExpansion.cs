@@ -13,7 +13,6 @@ public class BaseExpansion : MonoBehaviour
     private GlobalUnitHandler _unitHandler;
     private BaseManager _baseManager;
 
-    private int _lastCount = 0;
     private GameObject _flagInstance;
 
     public void Init(Base baseRef, ResourceCounter counter, GlobalUnitHandler unitHandler, BaseManager baseManager)
@@ -26,18 +25,13 @@ public class BaseExpansion : MonoBehaviour
 
     public void SetFlag(Vector3 position)
     {
-        if (_flagInstance != null)
-            Destroy(_flagInstance);
-
         _flagPosition = position;
         _expanding = true;
 
         _flagInstance = Instantiate(_flagPrefab, position, Quaternion.identity);
-
-        _base.SetExpansionMode(true);
     }
 
-    public void SetColonizationState(bool isActive)
+    public void ResetFlagState(bool isActive)
     {
         _expanding = isActive;
 
@@ -53,28 +47,46 @@ public class BaseExpansion : MonoBehaviour
         }
     }
 
-
     private void Update()
     {
-        if (_expanding == false || _flagPosition == null)
+        if (!_expanding || _flagPosition == null)
             return;
 
-        if (_counter.Count - _lastCount >= _resourcesToExpand)
-        {
-            Unit builder = _unitHandler.FindFreeUnitFromBase(_base);
+        Debug.Log($"[BaseExpansion] Expansion in progress, resource count: {_counter.Count}");
 
-            if (builder != null)
-            {
-                builder.MoveTo(_flagPosition.Value);
-                builder.OnArrived += BuildNewBase;
-                _lastCount += _resourcesToExpand;
-                _expanding = false;
-            }
+        if (_counter.Decrement(_resourcesToExpand) == false)
+        {
+            Debug.Log("[BaseExpansion] Not enough resources to start expansion.");
+            return;
+        }
+
+        Unit builder = _unitHandler.FindFreeUnitFromBase(_base);
+        if (builder != null)
+        {
+            Debug.Log($"[BaseExpansion] Assigned unit {builder.name} to build base at {_flagPosition.Value}");
+            builder.StartBaseBuildingTask(_flagPosition.Value);
+            builder.OnArrived += BuildNewBase;
+
+            _expanding = false;
+            _base.SetExpansionMode(false);
+        }
+        else
+        {
+            Debug.Log("[BaseExpansion] No available builder unit found.");
         }
     }
 
     private void BuildNewBase(Unit unit)
     {
+        float distance = Vector3.Distance(unit.transform.position, _flagPosition.Value);
+        if (distance > 7f)
+        {
+            Debug.Log($"[BaseExpansion] Unit {unit.name} is too far from flag to build. Distance: {distance}");
+            return;
+        }
+
+        Debug.Log($"[BaseExpansion] Unit {unit.name} arrived. Building new base at {_flagPosition.Value}");
+
         _baseManager.CreateNewBase(_flagPosition.Value, unit);
         unit.OnArrived -= BuildNewBase;
 

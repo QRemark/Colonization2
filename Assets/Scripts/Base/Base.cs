@@ -23,7 +23,6 @@ public class Base : MonoBehaviour
         _isInExpansionMode = isExpanding;
 
         _unitExpansion.enabled = !isExpanding;
-        _baseExpansion.SetColonizationState(isExpanding);
     }
 
     public void SetFlag(Vector3 position)

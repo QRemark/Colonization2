@@ -1,8 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(PlayerInput), typeof(CameraMover), typeof(ZoomCamera))]
-[RequireComponent(typeof(CameraRotator))]
+[RequireComponent(typeof(CameraMover), typeof(ZoomCamera), typeof(CameraRotator))]
 public class CameraHandler : MonoBehaviour
 {
     [SerializeField] private CameraMover _cameraMover;
@@ -26,18 +25,18 @@ public class CameraHandler : MonoBehaviour
         _cameraRotator.Rotate(_rotateInput);
     }
 
-    public void OnMove(InputAction.CallbackContext input)
+    public void OnMove(InputAction.CallbackContext ctx)
     {
-        _moveInput = input.ReadValue<Vector2>();
+        _moveInput = ctx.ReadValue<Vector2>();
     }
 
-    public void OnZoom(InputAction.CallbackContext input)
+    public void OnZoom(InputAction.CallbackContext ctx)
     {
-        _zoomInput = input.ReadValue<float>();
+        _zoomInput = ctx.ReadValue<float>();
     }
 
-    public void OnRotate(InputAction.CallbackContext context)
+    public void OnRotate(InputAction.CallbackContext ctx)
     {
-        _rotateInput = context.ReadValue<float>();
+        _rotateInput = ctx.ReadValue<float>();
     }
 }

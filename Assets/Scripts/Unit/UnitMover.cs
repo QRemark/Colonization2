@@ -5,7 +5,7 @@ using System;
 public class UnitMover : MonoBehaviour
 {
     [SerializeField] private float _baseSpeed = 25f;
-    [SerializeField] private float _arriveThreshold = 1f; 
+    [SerializeField] private float _arriveThreshold = 4f; 
 
     private Rigidbody _rigidbody;
     private Vector3 _targetPosition;

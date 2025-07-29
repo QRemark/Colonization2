@@ -14,6 +14,8 @@ public class Unit : MonoBehaviour
     private Resource _targetResource;
     private Base _assignedBase;
 
+    private bool _isBuildingBase = false;
+
     public bool ReadyForNewTask { get; private set; }
     public bool IsBusy { get; private set; }
 
@@ -37,13 +39,17 @@ public class Unit : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (IsBusy == false)
+        if (!IsBusy)
+            return;
+
+        if (_isBuildingBase)
             return;
 
         if (_resourceHandler.IsTryPickup(_targetResource, _pickupRadius))
         {
             _mover.SetTarget(_basePosition);
         }
+
         if (_resourceHandler.IsTryDelivery(_basePosition, out Resource delivered))
         {
             NotifyDelivery(delivered);
@@ -53,6 +59,9 @@ public class Unit : MonoBehaviour
 
     private void HandleArrived()
     {
+        if (_isBuildingBase)
+            _isBuildingBase = false;
+
         OnArrived?.Invoke(this);
     }
 
@@ -63,20 +72,25 @@ public class Unit : MonoBehaviour
         _mover.SetTarget(position);
     }
 
+    public void StartBaseBuildingTask(Vector3 position)
+    {
+        _isBuildingBase = true;
+        IsBusy = true;
+        ReadyForNewTask = false;
+
+        _targetResource = null;
+        _resourceHandler.ClearCarryState();
+        _mover.SetTarget(position);
+    }
+
     public bool SetTarget(Resource resource)
     {
-        if (resource == null)
-        {
+        if (resource == null || IsBusy)
             return false;
-        }
-
-        if (IsBusy)
-        {
-            return false;
-        }
 
         _targetResource = resource;
         _mover.SetTarget(resource.transform.position);
+
         _resourceHandler.SetCarriedResource(null);
         _resourceHandler.ClearCarryState();
 
