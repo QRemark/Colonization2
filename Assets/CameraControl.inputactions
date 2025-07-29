@@ -190,6 +190,54 @@
                     "isPartOfComposite": true
                 }
             ]
+        },
+        {
+            "name": "Base",
+            "id": "568f94d2-86f7-4927-9d49-dcf782afbc38",
+            "actions": [
+                {
+                    "name": "SelectBase",
+                    "type": "Button",
+                    "id": "5ba536ea-0e1b-41b6-9c5d-bad59594fa6f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PlaceFlag",
+                    "type": "Button",
+                    "id": "1e168075-8825-47a8-8e92-ab1393983a0a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "d1b5073c-a32d-45ed-b1f8-da048e8fac09",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SelectBase",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1241fe1a-c8c3-488e-9f2b-060c0f3083cc",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PlaceFlag",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

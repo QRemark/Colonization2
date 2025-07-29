@@ -26,14 +26,33 @@ public class BaseExpansion : MonoBehaviour
 
     public void SetFlag(Vector3 position)
     {
-        _flagPosition = position;
-        _expanding = true;
-
         if (_flagInstance != null)
             Destroy(_flagInstance);
 
+        _flagPosition = position;
+        _expanding = true;
+
         _flagInstance = Instantiate(_flagPrefab, position, Quaternion.identity);
+
+        _base.SetExpansionMode(true);
     }
+
+    public void SetColonizationState(bool isActive)
+    {
+        _expanding = isActive;
+
+        if (!isActive)
+        {
+            _flagPosition = null;
+
+            if (_flagInstance != null)
+            {
+                Destroy(_flagInstance);
+                _flagInstance = null;
+            }
+        }
+    }
+
 
     private void Update()
     {
@@ -62,5 +81,6 @@ public class BaseExpansion : MonoBehaviour
         Destroy(_flagInstance);
         _flagInstance = null;
         _flagPosition = null;
+        _base.SetExpansionMode(false);
     }
 }

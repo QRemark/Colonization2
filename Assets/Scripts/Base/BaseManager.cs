@@ -2,9 +2,8 @@ using UnityEngine;
 
 public class BaseManager : MonoBehaviour
 {
-    [SerializeField] private GameObject _basePrefab;
+    [SerializeField] private BaseSpawner _baseSpawner;
     [SerializeField] private Transform _initialBasePosition;
-
     [SerializeField] private GlobalUnitHandler _globalUnitHandler;
     [SerializeField] private ResourceStorage _resourceStorage;
     [SerializeField] private int _initialUnitCount = 3;
@@ -16,8 +15,7 @@ public class BaseManager : MonoBehaviour
 
     private void CreateInitialBase(Vector3 position)
     {
-        GameObject baseGO = Instantiate(_basePrefab, position, Quaternion.identity);
-        Base baseComponent = baseGO.GetComponent<Base>();
+        Base baseComponent = _baseSpawner.SpawnBase(position);
         baseComponent.Init(
             _globalUnitHandler.GetComponent<UnitSpawner>(),
             _resourceStorage,
@@ -33,8 +31,7 @@ public class BaseManager : MonoBehaviour
 
     public void CreateNewBase(Vector3 position, Unit builder)
     {
-        GameObject baseGO = Instantiate(_basePrefab, position, Quaternion.identity);
-        Base newBase = baseGO.GetComponent<Base>();
+        Base newBase = _baseSpawner.SpawnBase(position);
         newBase.Init(
             _globalUnitHandler.GetComponent<UnitSpawner>(),
             _resourceStorage,
@@ -42,7 +39,6 @@ public class BaseManager : MonoBehaviour
             this
         );
 
-        builder.AssignToBase(newBase);
-        builder.Initialize(position);
+        _globalUnitHandler.TransferUnitToBase(builder, newBase, position);
     }
 }

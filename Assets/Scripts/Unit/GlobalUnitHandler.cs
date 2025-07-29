@@ -37,6 +37,13 @@ public class GlobalUnitHandler : MonoBehaviour
         return unit;
     }
 
+    public void TransferUnitToBase(Unit unit, Base newBase, Vector3 newBasePosition)
+    {
+        unit.AssignToBase(newBase);
+        unit.Initialize(newBasePosition);
+    }
+
+
 
     public void ReturnUnit(Unit unit)
     {

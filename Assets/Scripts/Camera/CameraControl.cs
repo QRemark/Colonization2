@@ -276,6 +276,54 @@ public partial class @CameraControl: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""Base"",
+            ""id"": ""568f94d2-86f7-4927-9d49-dcf782afbc38"",
+            ""actions"": [
+                {
+                    ""name"": ""SelectBase"",
+                    ""type"": ""Button"",
+                    ""id"": ""5ba536ea-0e1b-41b6-9c5d-bad59594fa6f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PlaceFlag"",
+                    ""type"": ""Button"",
+                    ""id"": ""1e168075-8825-47a8-8e92-ab1393983a0a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""d1b5073c-a32d-45ed-b1f8-da048e8fac09"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SelectBase"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1241fe1a-c8c3-488e-9f2b-060c0f3083cc"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PlaceFlag"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -285,11 +333,16 @@ public partial class @CameraControl: IInputActionCollection2, IDisposable
         m_Camera_Move = m_Camera.FindAction("Move", throwIfNotFound: true);
         m_Camera_Zoom = m_Camera.FindAction("Zoom", throwIfNotFound: true);
         m_Camera_Rotate = m_Camera.FindAction("Rotate", throwIfNotFound: true);
+        // Base
+        m_Base = asset.FindActionMap("Base", throwIfNotFound: true);
+        m_Base_SelectBase = m_Base.FindAction("SelectBase", throwIfNotFound: true);
+        m_Base_PlaceFlag = m_Base.FindAction("PlaceFlag", throwIfNotFound: true);
     }
 
     ~@CameraControl()
     {
         UnityEngine.Debug.Assert(!m_Camera.enabled, "This will cause a leak and performance issues, CameraControl.Camera.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Base.enabled, "This will cause a leak and performance issues, CameraControl.Base.Disable() has not been called.");
     }
 
     /// <summary>
@@ -479,6 +532,113 @@ public partial class @CameraControl: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="CameraActions" /> instance referencing this action map.
     /// </summary>
     public CameraActions @Camera => new CameraActions(this);
+
+    // Base
+    private readonly InputActionMap m_Base;
+    private List<IBaseActions> m_BaseActionsCallbackInterfaces = new List<IBaseActions>();
+    private readonly InputAction m_Base_SelectBase;
+    private readonly InputAction m_Base_PlaceFlag;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "Base".
+    /// </summary>
+    public struct BaseActions
+    {
+        private @CameraControl m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public BaseActions(@CameraControl wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "Base/SelectBase".
+        /// </summary>
+        public InputAction @SelectBase => m_Wrapper.m_Base_SelectBase;
+        /// <summary>
+        /// Provides access to the underlying input action "Base/PlaceFlag".
+        /// </summary>
+        public InputAction @PlaceFlag => m_Wrapper.m_Base_PlaceFlag;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_Base; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="BaseActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(BaseActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="BaseActions" />
+        public void AddCallbacks(IBaseActions instance)
+        {
+            if (instance == null || m_Wrapper.m_BaseActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_BaseActionsCallbackInterfaces.Add(instance);
+            @SelectBase.started += instance.OnSelectBase;
+            @SelectBase.performed += instance.OnSelectBase;
+            @SelectBase.canceled += instance.OnSelectBase;
+            @PlaceFlag.started += instance.OnPlaceFlag;
+            @PlaceFlag.performed += instance.OnPlaceFlag;
+            @PlaceFlag.canceled += instance.OnPlaceFlag;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="BaseActions" />
+        private void UnregisterCallbacks(IBaseActions instance)
+        {
+            @SelectBase.started -= instance.OnSelectBase;
+            @SelectBase.performed -= instance.OnSelectBase;
+            @SelectBase.canceled -= instance.OnSelectBase;
+            @PlaceFlag.started -= instance.OnPlaceFlag;
+            @PlaceFlag.performed -= instance.OnPlaceFlag;
+            @PlaceFlag.canceled -= instance.OnPlaceFlag;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="BaseActions.UnregisterCallbacks(IBaseActions)" />.
+        /// </summary>
+        /// <seealso cref="BaseActions.UnregisterCallbacks(IBaseActions)" />
+        public void RemoveCallbacks(IBaseActions instance)
+        {
+            if (m_Wrapper.m_BaseActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="BaseActions.AddCallbacks(IBaseActions)" />
+        /// <seealso cref="BaseActions.RemoveCallbacks(IBaseActions)" />
+        /// <seealso cref="BaseActions.UnregisterCallbacks(IBaseActions)" />
+        public void SetCallbacks(IBaseActions instance)
+        {
+            foreach (var item in m_Wrapper.m_BaseActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_BaseActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="BaseActions" /> instance referencing this action map.
+    /// </summary>
+    public BaseActions @Base => new BaseActions(this);
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Camera" which allows adding and removing callbacks.
     /// </summary>
@@ -507,5 +667,27 @@ public partial class @CameraControl: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRotate(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Base" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="BaseActions.AddCallbacks(IBaseActions)" />
+    /// <seealso cref="BaseActions.RemoveCallbacks(IBaseActions)" />
+    public interface IBaseActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "SelectBase" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSelectBase(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "PlaceFlag" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPlaceFlag(InputAction.CallbackContext context);
     }
 }
