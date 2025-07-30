@@ -6,6 +6,7 @@ public class BaseSelector : MonoBehaviour
     [SerializeField] private Camera _mainCamera;
     [SerializeField] private LayerMask _baseLayer;
     [SerializeField] private GlobalUnitHandler _unitHandler;
+    [SerializeField] private BaseManager _baseManager;
 
     private Base _selectedBase;
 
@@ -19,7 +20,6 @@ public class BaseSelector : MonoBehaviour
         {
             if (hit.collider.TryGetComponent(out Base newBase))
             {
-
                 if (_unitHandler.GetUnitCountForBase(newBase) < 2)
                 {
                     Debug.Log($"[BaseSelector] Ѕазу {newBase.name} нельз€ выбрать: юнитов меньше двух");
@@ -33,14 +33,12 @@ public class BaseSelector : MonoBehaviour
                     return;
                 }
 
-
                 _selectedBase?.SetExpansionMode(false);
                 _selectedBase = newBase;
                 _selectedBase.SetExpansionMode(true);
             }
         }
     }
-
 
     public void OnPlaceFlag(InputAction.CallbackContext context)
     {
@@ -53,7 +51,6 @@ public class BaseSelector : MonoBehaviour
 
             _selectedBase.SetExpansionMode(false);
             _selectedBase = null;
-
             return;
         }
 
@@ -61,8 +58,28 @@ public class BaseSelector : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
         {
-            _selectedBase.SetFlag(hit.point);
+            Vector3 flagPosition = hit.point;
+
+            const float minDistance = 50f;
+            Collider[] nearBases = Physics.OverlapSphere(flagPosition, minDistance, _baseLayer);
+
+            Debug.Log($"[DEBUG] OverlapSphere hit count: {nearBases.Length}");
+
+            foreach (var col in nearBases)
+            {
+                Base otherBase = col.GetComponent<Base>();
+                if (otherBase == null)
+                    continue;
+
+                Debug.Log($"[DEBUG] Hit: {otherBase.name}");
+
+                Debug.Log($"[BaseSelector] —лишком близко к базе {otherBase.name}. —брос.");
+                _selectedBase.SetExpansionMode(false);
+                _selectedBase = null;
+                return;
+            }
+
+            _selectedBase.SetFlag(flagPosition);
         }
     }
-
 }
