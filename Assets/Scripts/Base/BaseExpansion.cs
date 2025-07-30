@@ -1,3 +1,5 @@
+
+
 using UnityEngine;
 
 public class BaseExpansion : MonoBehaviour
@@ -52,7 +54,12 @@ public class BaseExpansion : MonoBehaviour
         if (!_expanding || _flagPosition == null)
             return;
 
-        Debug.Log($"[BaseExpansion] Expansion in progress, resource count: {_counter.Count}");
+        Unit builder = _unitHandler.FindFreeUnitFromBase(_base);
+        if (builder == null)
+        {
+            Debug.Log("[BaseExpansion] No available builder unit found.");
+            return;
+        }
 
         if (_counter.Decrement(_resourcesToExpand) == false)
         {
@@ -60,20 +67,12 @@ public class BaseExpansion : MonoBehaviour
             return;
         }
 
-        Unit builder = _unitHandler.FindFreeUnitFromBase(_base);
-        if (builder != null)
-        {
-            Debug.Log($"[BaseExpansion] Assigned unit {builder.name} to build base at {_flagPosition.Value}");
-            builder.StartBaseBuildingTask(_flagPosition.Value);
-            builder.OnArrived += BuildNewBase;
+        Debug.Log($"[BaseExpansion] Assigned unit {builder.name} to build base at {_flagPosition.Value}");
+        builder.StartBaseBuildingTask(_flagPosition.Value);
+        builder.OnArrived += BuildNewBase;
 
-            _expanding = false;
-            _base.SetExpansionMode(false);
-        }
-        else
-        {
-            Debug.Log("[BaseExpansion] No available builder unit found.");
-        }
+        _expanding = false;
+        _base.SetExpansionMode(false);
     }
 
     private void BuildNewBase(Unit unit)

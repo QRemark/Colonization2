@@ -43,8 +43,6 @@ public class GlobalUnitHandler : MonoBehaviour
         unit.Initialize(newBasePosition);
     }
 
-
-
     public void ReturnUnit(Unit unit)
     {
         if (_allUnits.Contains(unit))
