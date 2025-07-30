@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BaseManager : MonoBehaviour
@@ -7,6 +8,22 @@ public class BaseManager : MonoBehaviour
     [SerializeField] private GlobalUnitHandler _globalUnitHandler;
     [SerializeField] private ResourceStorage _resourceStorage;
     [SerializeField] private int _initialUnitCount = 3;
+
+    private  List<Base> _allBases;
+
+    public IReadOnlyList<Base> GetAllBases() => _allBases;
+
+    private void Awake()
+    {
+        _allBases = new List<Base>();
+    }
+
+
+    public void RegisterBase(Base baseRef)
+    {
+        if (!_allBases.Contains(baseRef))
+            _allBases.Add(baseRef);
+    }
 
     private void Start()
     {
@@ -27,6 +44,8 @@ public class BaseManager : MonoBehaviour
         {
             _globalUnitHandler.SpawnUnitForBase(position, baseComponent);
         }
+
+        RegisterBase(baseComponent);
     }
 
     public void CreateNewBase(Vector3 position, Unit builder)
@@ -39,6 +58,7 @@ public class BaseManager : MonoBehaviour
             this
         );
 
+        RegisterBase(newBase);
         _globalUnitHandler.TransferUnitToBase(builder, newBase, position);
     }
 }

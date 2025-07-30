@@ -153,6 +153,7 @@ MonoBehaviour:
   _baseLayer:
     serializedVersion: 2
     m_Bits: 512
+  _unitHandler: {fileID: 1604258033}
 --- !u!114 &44381815
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -532,6 +533,7 @@ MonoBehaviour:
   _prefab: {fileID: 6108143555988602452, guid: 83d61b3d3eccde646ad5b4823e434c16, type: 3}
   _parentPosition: {fileID: 1221934813}
   _initialSize: 10
+  _spawnY: 12
 --- !u!1 &1570121192
 GameObject:
   m_ObjectHideFlags: 0
@@ -1008,10 +1010,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefab: {fileID: 2364068691362051382, guid: 07276d3f2094a5243aeb30e01c48a7bc, type: 3}
   _parentPosition: {fileID: 1738240518}
-  _initialSize: 100
-  _spawnInterval: 1
+  _initialSize: 250
+  _spawnInterval: 0.1
   _innerRadius: 40
-  _outerRadius: 150
+  _outerRadius: 200
   _spawnYOffcet: 20
   _spawnCenter: {fileID: 1221934813}
   _resourceStorage: {fileID: 1738240519}
