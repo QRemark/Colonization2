@@ -26,6 +26,7 @@ public class BaseSelector : MonoBehaviour
 
                     if (_selectedBase != null)
                     {
+                        _selectedBase.SetHighlight(false);
                         _selectedBase.SetExpansionMode(false);
                         _selectedBase = null;
                     }
@@ -40,6 +41,7 @@ public class BaseSelector : MonoBehaviour
 
                 _selectedBase = newBase;
                 _selectedBase.SetExpansionMode(true);
+                _selectedBase.SetHighlight(true);
             }
         }
     }
@@ -88,7 +90,6 @@ public class BaseSelector : MonoBehaviour
                 return;
             }
 
-            //_selectedBase.SetFlag(flagPosition);
             if (_selectedBase.TryGetComponent(out BaseExpansion expansion) && expansion.IsLocked)
             {
                 Debug.Log("[BaseSelector] База заблокирована, пока идёт строительство.");
@@ -97,6 +98,8 @@ public class BaseSelector : MonoBehaviour
 
             _selectedBase.SetFlag(flagPosition);
 
+            _selectedBase.SetHighlight(false);
+            _selectedBase = null;
         }
     }
 }

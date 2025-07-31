@@ -7,8 +7,17 @@ public class Base : MonoBehaviour
     [SerializeField] private BaseExpansion _baseExpansion;
     [SerializeField] private ResourceCounter _resourceCounter;
 
+    [SerializeField] private MeshRenderer _renderer;
+    [SerializeField] private Color _defaultColor = Color.white;
+    [SerializeField] private Color _highlightColor = Color.red;
+
     private bool _isInExpansionMode = false;
     public bool IsInExpansionMode => _isInExpansionMode;
+
+    private void Awake()
+    {
+        _renderer.material = new Material(_renderer.material);
+    }
 
     public void Init(UnitSpawner unitSpawner, ResourceStorage resourceStorage, GlobalUnitHandler globalUnitHandler, BaseManager baseManager)
     {
@@ -16,6 +25,14 @@ public class Base : MonoBehaviour
 
         _unitExpansion.Init(this, _resourceCounter, globalUnitHandler);
         _baseExpansion.Init(this, _resourceCounter, globalUnitHandler, baseManager);
+    }
+
+    public void SetHighlight(bool isHighlighted)
+    {
+        if (_renderer != null)
+        {
+            _renderer.material.color = isHighlighted ? _highlightColor : _defaultColor;
+        }
     }
 
     public void SetExpansionMode(bool isExpanding)

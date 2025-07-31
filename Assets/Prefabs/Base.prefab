@@ -5344,6 +5344,9 @@ MonoBehaviour:
   _unitExpansion: {fileID: 2454854338420596181}
   _baseExpansion: {fileID: 3183777606730924507}
   _resourceCounter: {fileID: 4873944799968906170}
+  _renderer: {fileID: 1519803052884691398}
+  _defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  _highlightColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &5224692039396698915
 MonoBehaviour:
   m_ObjectHideFlags: 0
