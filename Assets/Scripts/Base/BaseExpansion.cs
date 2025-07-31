@@ -31,6 +31,13 @@ public class BaseExpansion : MonoBehaviour
     {
         Debug.Log($"[BaseExpansion] SetFlag called with position {position}");
 
+        if (_flagInstance != null)
+        {
+            Debug.Log("[BaseExpansion] Старый флаг удалён");
+            Destroy(_flagInstance);
+            _flagInstance = null;
+        }
+
         _flagPosition = position;
         _expanding = true;
         _waitingForBuilder = false;
