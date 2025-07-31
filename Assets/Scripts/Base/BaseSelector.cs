@@ -88,7 +88,15 @@ public class BaseSelector : MonoBehaviour
                 return;
             }
 
+            //_selectedBase.SetFlag(flagPosition);
+            if (_selectedBase.TryGetComponent(out BaseExpansion expansion) && expansion.IsLocked)
+            {
+                Debug.Log("[BaseSelector] База заблокирована, пока идёт строительство.");
+                return;
+            }
+
             _selectedBase.SetFlag(flagPosition);
+
         }
     }
 }

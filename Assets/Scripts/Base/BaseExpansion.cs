@@ -16,6 +16,10 @@ public class BaseExpansion : MonoBehaviour
     private BaseManager _baseManager;
 
     private GameObject _flagInstance;
+    private bool _isLocked = false;
+    public bool IsLocked => _isLocked;
+
+
 
     public void Init(Base baseRef, ResourceCounter counter, GlobalUnitHandler unitHandler, BaseManager baseManager)
     {
@@ -29,6 +33,12 @@ public class BaseExpansion : MonoBehaviour
 
     public void SetFlag(Vector3 position)
     {
+        if (_isLocked)
+        {
+            Debug.Log($"[BaseExpansion] Нельзя установить флаг — база заблокирована до окончания расширения.");
+            return;
+        }
+
         Debug.Log($"[BaseExpansion] SetFlag called with position {position}");
 
         if (_flagInstance != null)
@@ -43,9 +53,9 @@ public class BaseExpansion : MonoBehaviour
         _waitingForBuilder = false;
 
         _flagInstance = Instantiate(_flagPrefab, position, Quaternion.identity);
-
         _base.SetExpansionMode(true);
     }
+
 
     public void OnUnitIdleFromThisBase(Unit unit)
     {
@@ -123,6 +133,7 @@ public class BaseExpansion : MonoBehaviour
         builder.StartBaseBuildingTask(_flagPosition.Value);
         builder.OnArrived += BuildNewBase;
 
+        _isLocked = true;
         _expanding = false;
         _waitingForBuilder = false;
     }
@@ -146,6 +157,7 @@ public class BaseExpansion : MonoBehaviour
         _flagInstance = null;
         _flagPosition = null;
         _expanding = false;
+        _isLocked = false;
         _base.SetExpansionMode(false);
     }
 }
