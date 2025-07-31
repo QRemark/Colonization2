@@ -1,6 +1,5 @@
-
-
 using UnityEngine;
+using System.Linq;
 
 public class BaseExpansion : MonoBehaviour
 {
@@ -9,6 +8,7 @@ public class BaseExpansion : MonoBehaviour
 
     private Vector3? _flagPosition;
     private bool _expanding = false;
+    private bool _waitingForBuilder = false;
 
     private Base _base;
     private ResourceCounter _counter;
@@ -23,30 +23,35 @@ public class BaseExpansion : MonoBehaviour
         _counter = counter;
         _unitHandler = unitHandler;
         _baseManager = baseManager;
+
+        _counter.CountChanged += OnResourceCountChanged;
     }
 
     public void SetFlag(Vector3 position)
     {
+        Debug.Log($"[BaseExpansion] SetFlag called with position {position}");
+
         _flagPosition = position;
         _expanding = true;
+        _waitingForBuilder = false;
 
         _flagInstance = Instantiate(_flagPrefab, position, Quaternion.identity);
+
+        _base.SetExpansionMode(true);
     }
 
-    public void ResetFlagState(bool isActive)
+    public void OnUnitIdleFromThisBase(Unit unit)
     {
-        _expanding = isActive;
+        Debug.Log($"[BaseExpansion] DEBUG: _waitingForBuilder={_waitingForBuilder}, _expanding={_expanding}, _flagPosition={_flagPosition}");
 
-        if (!isActive)
+        if (!_waitingForBuilder || !_expanding || _flagPosition == null)
         {
-            _flagPosition = null;
-
-            if (_flagInstance != null)
-            {
-                Destroy(_flagInstance);
-                _flagInstance = null;
-            }
+            Debug.Log($"[BaseExpansion] Пропускаем повторную попытку.");
+            return;
         }
+
+        Debug.Log("[BaseExpansion] Повторная попытка TryStartExpansion через BecameIdle");
+        TryStartExpansion();
     }
 
     private void Update()
@@ -54,16 +59,56 @@ public class BaseExpansion : MonoBehaviour
         if (!_expanding || _flagPosition == null)
             return;
 
-        Unit builder = _unitHandler.FindFreeUnitFromBase(_base);
-        if (builder == null)
+        TryStartExpansion();
+    }
+
+    public void OnResourceCountChanged(int newCount)
+    {
+        if (_waitingForBuilder && _flagPosition != null && _expanding)
         {
-            Debug.Log("[BaseExpansion] No available builder unit found.");
+            Debug.Log("[BaseExpansion] Retrying builder assignment on CountChanged...");
+            TryStartExpansion();
+        }
+    }
+
+    private void TryStartExpansion()
+    {
+        Debug.Log($"[BaseExpansion] TryStartExpansion для базы {_base.name}: ресурсы={_counter.Count}");
+
+        if (_counter.Count < _resourcesToExpand)
+        {
+            Debug.Log("[BaseExpansion] Not enough resources yet.");
+
+            if (!_waitingForBuilder)
+            {
+                Debug.Log("[BaseExpansion] Not enough resources yet, setting waitingForBuilder = true");
+                _waitingForBuilder = true;
+            }
+
             return;
         }
 
-        if (_counter.Decrement(_resourcesToExpand) == false)
+        var ownIdleUnits = _unitHandler.GetAllUnits()
+            .Where(u => u.GetAssignedBase() == _base && u.ReadyForNewTask)
+            .ToList();
+
+        foreach (var unit in ownIdleUnits)
         {
-            Debug.Log("[BaseExpansion] Not enough resources to start expansion.");
+            Debug.Log($"[DEBUG] Кандидат: {unit.name}, база: {unit.GetAssignedBase()?.name}, свободен: {unit.ReadyForNewTask}");
+        }
+
+        Unit builder = ownIdleUnits.FirstOrDefault();
+
+        if (builder == null)
+        {
+            Debug.Log("[BaseExpansion] Юнитов нет, ждём дальше...");
+            _waitingForBuilder = true;
+            return;
+        }
+
+        if (!_counter.Decrement(_resourcesToExpand))
+        {
+            Debug.LogWarning("[BaseExpansion] Race condition: ресурсов не хватило на Decrement.");
             return;
         }
 
@@ -72,8 +117,9 @@ public class BaseExpansion : MonoBehaviour
         builder.OnArrived += BuildNewBase;
 
         _expanding = false;
-        _base.SetExpansionMode(false);
+        _waitingForBuilder = false;
     }
+
 
     private void BuildNewBase(Unit unit)
     {
@@ -92,6 +138,7 @@ public class BaseExpansion : MonoBehaviour
         Destroy(_flagInstance);
         _flagInstance = null;
         _flagPosition = null;
+        _expanding = false;
         _base.SetExpansionMode(false);
     }
 }

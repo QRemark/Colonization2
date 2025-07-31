@@ -27,6 +27,8 @@ public class BaseFlow : MonoBehaviour
         _assigner.Init(_activeTasks, _resourceStorage);
         _resourceUI.Initialize(_resourceCounter);
         _scanner.ResourcesUpdated += OnResourcesUpdated;
+        _resourceCounter.CountChanged += _base.OnResourceCountChanged;
+
     }
 
 

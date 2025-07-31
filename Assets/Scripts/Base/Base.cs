@@ -29,4 +29,23 @@ public class Base : MonoBehaviour
     {
         _baseExpansion.SetFlag(position);
     }
+    public void OnUnitSpawned(Unit unit)
+    {
+        unit.BecameIdle += HandleUnitBecameIdle;
+    }
+
+    private void HandleUnitBecameIdle(Unit unit)
+    {
+        Debug.Log($"[Base] Пойман BecameIdle от {unit.name}, база {_baseExpansion.name}, isInExpansionMode: {_isInExpansionMode}");
+
+        if (_isInExpansionMode)
+        {
+            _baseExpansion.OnUnitIdleFromThisBase(unit);
+        }
+    }
+    public void OnResourceCountChanged(int count)
+    {
+        _baseExpansion.OnResourceCountChanged(count);
+    }
+
 }

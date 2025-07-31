@@ -33,7 +33,11 @@ public class BaseSelector : MonoBehaviour
                     return;
                 }
 
-                _selectedBase?.SetExpansionMode(false);
+                if (_selectedBase != null && !_selectedBase.IsInExpansionMode)
+                {
+                    _selectedBase.SetExpansionMode(false);
+                }
+
                 _selectedBase = newBase;
                 _selectedBase.SetExpansionMode(true);
             }
@@ -74,7 +78,12 @@ public class BaseSelector : MonoBehaviour
                 Debug.Log($"[DEBUG] Hit: {otherBase.name}");
 
                 Debug.Log($"[BaseSelector] Слишком близко к базе {otherBase.name}. Сброс.");
-                _selectedBase.SetExpansionMode(false);
+
+                if (!_selectedBase.IsInExpansionMode)
+                {
+                    _selectedBase.SetExpansionMode(false);
+                }
+
                 _selectedBase = null;
                 return;
             }

@@ -21,6 +21,7 @@ public class Unit : MonoBehaviour
 
     public event Action<Unit, Resource> ResourceDelivered;
     public event Action<Unit> OnArrived;
+    public event Action<Unit> BecameIdle;
 
     public void Initialize(Vector3 position)
     {
@@ -65,12 +66,12 @@ public class Unit : MonoBehaviour
         OnArrived?.Invoke(this);
     }
 
-    public void MoveTo(Vector3 position)
-    {
-        IsBusy = true;
-        ReadyForNewTask = false;
-        _mover.SetTarget(position);
-    }
+    //public void MoveTo(Vector3 position)
+    //{
+    //    IsBusy = true;
+    //    ReadyForNewTask = false;
+    //    _mover.SetTarget(position);
+    //}
 
     public void StartBaseBuildingTask(Vector3 position)
     {
@@ -111,6 +112,8 @@ public class Unit : MonoBehaviour
         IsBusy = false;
         ReadyForNewTask = true;
         _mover.ClearTarget();
+        Debug.Log($"[Unit] {name} стал свободным. AssignedBase: {_assignedBase.name}");
+        BecameIdle?.Invoke(this);
     }
 
     public void AssignToBase(Base baseRef)

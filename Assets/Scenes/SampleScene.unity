@@ -1011,7 +1011,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefab: {fileID: 2364068691362051382, guid: 07276d3f2094a5243aeb30e01c48a7bc, type: 3}
   _parentPosition: {fileID: 1738240518}
-  _initialSize: 250
+  _initialSize: 200
   _spawnInterval: 0.1
   _innerRadius: 40
   _outerRadius: 200

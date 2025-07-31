@@ -7,7 +7,12 @@ public class GlobalUnitHandler : MonoBehaviour
     [SerializeField] private UnitSpawner _unitSpawner;
     [SerializeField] private int _maxUnitsPerBase = 10;
 
-    private List<Unit> _allUnits = new();
+    private List<Unit> _allUnits;
+
+    private void Awake()
+    {
+        _allUnits = new List<Unit>();
+    }
 
     public bool TrySpawnUnitForBase(Vector3 position, Base ownerBase)
     {
@@ -21,6 +26,7 @@ public class GlobalUnitHandler : MonoBehaviour
 
         _allUnits.Add(unit);
         unit.AssignToBase(ownerBase);
+        ownerBase.OnUnitSpawned(unit);
         return true;
     }
 
@@ -32,6 +38,7 @@ public class GlobalUnitHandler : MonoBehaviour
         {
             _allUnits.Add(unit);
             unit.AssignToBase(ownerBase);
+            ownerBase.OnUnitSpawned(unit);
         }
 
         return unit;
@@ -43,23 +50,10 @@ public class GlobalUnitHandler : MonoBehaviour
         unit.Initialize(newBasePosition);
     }
 
-    public void ReturnUnit(Unit unit)
+    public List<Unit> GetAllUnits()
     {
-        if (_allUnits.Contains(unit))
-        {
-            _unitSpawner.ReturnToPool(unit);
-            _allUnits.Remove(unit);
-        }
+        return _allUnits; 
     }
-
-    public Unit FindFreeUnitFromBase(Base baseRef)
-    {
-        return _allUnits
-            .Where(u => u.GetAssignedBase() == baseRef && u.ReadyForNewTask)
-            .FirstOrDefault();
-    }
-
-    public int GetTotalUnitCount() => _allUnits.Count;
 
     public int GetUnitCountForBase(Base baseRef)
     {
