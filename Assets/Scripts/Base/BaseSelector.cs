@@ -51,6 +51,15 @@ public class BaseSelector : MonoBehaviour
         if (!context.performed || _selectedBase == null)
             return;
 
+        if (_baseManager.IsBaseLimitReached())
+        {
+            Debug.Log("[BaseSelector] Установка флагов заблокирована из-за лимита.");
+            _selectedBase?.SetHighlight(false);
+            _selectedBase?.SetExpansionMode(false);
+            _selectedBase = null;
+            return;
+        }
+
         if (_unitHandler.GetUnitCountForBase(_selectedBase) < 2)
         {
             Debug.Log("[BaseSelector] Недостаточно юнитов для колонизации. Сброс выделения.");

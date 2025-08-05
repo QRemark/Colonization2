@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class Spawner<T> : MonoBehaviour where T : MonoBehaviour
 {
+    [SerializeField] protected int _initialSize = 10;
     [SerializeField] private T _prefab;
     [SerializeField] private Transform _parentPosition;
-    [SerializeField] private int _initialSize = 10;
 
     private Pool<T> _pool;
 
