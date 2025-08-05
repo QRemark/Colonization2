@@ -17,7 +17,7 @@ public class UnitExpansion : MonoBehaviour
 
     private void Update()
     {
-        if (_base.IsInExpansionMode)
+        if (!_base.CanProduceUnits)
             return;
 
         if (_counter.Count < _resourcesPerUnit)
@@ -30,4 +30,5 @@ public class UnitExpansion : MonoBehaviour
             _counter.Decrement(_resourcesPerUnit);
         }
     }
+
 }

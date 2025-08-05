@@ -136,6 +136,8 @@ public class BaseExpansion : MonoBehaviour
         _isLocked = true;
         _expanding = false;
         _waitingForBuilder = false;
+
+        _base.NotifyBuilderSent();
     }
 
 

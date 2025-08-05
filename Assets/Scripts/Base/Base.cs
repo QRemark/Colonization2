@@ -12,7 +12,10 @@ public class Base : MonoBehaviour
     [SerializeField] private Color _highlightColor = Color.red;
 
     private bool _isInExpansionMode = false;
+    private bool _canProduceWhileExpanding = false;
+
     public bool IsInExpansionMode => _isInExpansionMode;
+    public bool CanProduceUnits => !_isInExpansionMode || _canProduceWhileExpanding;
 
     private void Awake()
     {
@@ -39,7 +42,16 @@ public class Base : MonoBehaviour
     {
         _isInExpansionMode = isExpanding;
 
-        _unitExpansion.enabled = !isExpanding;
+        if (!isExpanding)
+            _canProduceWhileExpanding = false;
+
+        _unitExpansion.enabled = CanProduceUnits;
+    }
+    public void NotifyBuilderSent()
+    {
+        Debug.Log("[Base] Юнит отправлен, разрешаем производство во время расширения.");
+        _canProduceWhileExpanding = true;
+        _unitExpansion.enabled = true;
     }
 
     public void SetFlag(Vector3 position)
