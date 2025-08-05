@@ -20,24 +20,37 @@ public class BaseSelector : MonoBehaviour
         {
             if (hit.collider.TryGetComponent(out Base newBase))
             {
+                if (_selectedBase != null)
+                {
+                    _selectedBase.SetHighlight(false);
+                    _selectedBase.SetExpansionMode(false);
+                }
+
                 if (_unitHandler.GetUnitCountForBase(newBase) < 2)
                 {
-                    Debug.Log($"[BaseSelector] Базу {newBase.name} нельзя выбрать: юнитов меньше двух");
-
-                    if (_selectedBase != null)
-                    {
-                        _selectedBase.SetHighlight(false);
-                        _selectedBase.SetExpansionMode(false);
-                        _selectedBase = null;
-                    }
-
+                    Debug.Log("Нельзя выбрать");
+                    _selectedBase = null;
                     return;
                 }
 
-                if (_selectedBase != null && !_selectedBase.IsInExpansionMode)
-                {
-                    _selectedBase.SetExpansionMode(false);
-                }
+                //if (_unitHandler.GetUnitCountForBase(newBase) < 2)
+                //{
+                //    Debug.Log($"[BaseSelector] Базу {newBase.name} нельзя выбрать: юнитов меньше двух");
+
+                //    if (_selectedBase != null)
+                //    {
+                //        _selectedBase.SetHighlight(false);
+                //        _selectedBase.SetExpansionMode(false);
+                //        _selectedBase = null;
+                //    }
+
+                //    return;
+                //}
+
+                //if (_selectedBase != null && !_selectedBase.IsInExpansionMode)
+                //{
+                //    _selectedBase.SetExpansionMode(false);
+                //}
 
                 _selectedBase = newBase;
                 _selectedBase.SetExpansionMode(true);
@@ -86,16 +99,15 @@ public class BaseSelector : MonoBehaviour
                 if (otherBase == null)
                     continue;
 
-                Debug.Log($"[DEBUG] Hit: {otherBase.name}");
-
                 Debug.Log($"[BaseSelector] Слишком близко к базе {otherBase.name}. Сброс.");
 
-                if (!_selectedBase.IsInExpansionMode)
+                if (_selectedBase != null)
                 {
+                    _selectedBase.SetHighlight(false);  
                     _selectedBase.SetExpansionMode(false);
+                    _selectedBase = null;
                 }
 
-                _selectedBase = null;
                 return;
             }
 
