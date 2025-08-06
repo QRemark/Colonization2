@@ -40,7 +40,7 @@ public class Unit : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!IsBusy)
+        if (IsBusy == false)
             return;
 
         if (_isBuildingBase)
@@ -65,13 +65,6 @@ public class Unit : MonoBehaviour
 
         OnArrived?.Invoke(this);
     }
-
-    //public void MoveTo(Vector3 position)
-    //{
-    //    IsBusy = true;
-    //    ReadyForNewTask = false;
-    //    _mover.SetTarget(position);
-    //}
 
     public void StartBaseBuildingTask(Vector3 position)
     {

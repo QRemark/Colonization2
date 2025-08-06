@@ -17,7 +17,7 @@ public class UnitExpansion : MonoBehaviour
 
     private void Update()
     {
-        if (!_base.CanProduceUnits)
+        if (_base.CanProduceUnits == false)
             return;
 
         if (_counter.Count < _resourcesPerUnit)

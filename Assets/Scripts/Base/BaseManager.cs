@@ -21,7 +21,7 @@ public class BaseManager : MonoBehaviour
 
     public void RegisterBase(Base baseRef)
     {
-        if (!_allBases.Contains(baseRef))
+        if (_allBases.Contains(baseRef) == false)
             _allBases.Add(baseRef);
     }
 

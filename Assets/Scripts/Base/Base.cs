@@ -15,7 +15,7 @@ public class Base : MonoBehaviour
     private bool _canProduceWhileExpanding = false;
 
     public bool IsInExpansionMode => _isInExpansionMode;
-    public bool CanProduceUnits => !_isInExpansionMode || _canProduceWhileExpanding;
+    public bool CanProduceUnits => _isInExpansionMode == false|| _canProduceWhileExpanding;
 
     private void Awake()
     {
@@ -42,7 +42,7 @@ public class Base : MonoBehaviour
     {
         _isInExpansionMode = isExpanding;
 
-        if (!isExpanding)
+        if (isExpanding == false)
             _canProduceWhileExpanding = false;
 
         _unitExpansion.enabled = CanProduceUnits;

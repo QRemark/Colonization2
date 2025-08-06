@@ -61,7 +61,7 @@ public class BaseExpansion : MonoBehaviour
     {
         Debug.Log($"[BaseExpansion] DEBUG: _waitingForBuilder={_waitingForBuilder}, _expanding={_expanding}, _flagPosition={_flagPosition}");
 
-        if (!_waitingForBuilder || !_expanding || _flagPosition == null)
+        if (_waitingForBuilder  == false|| _expanding == false|| _flagPosition == null)
         {
             Debug.Log($"[BaseExpansion] Пропускаем повторную попытку.");
             return;
@@ -73,7 +73,7 @@ public class BaseExpansion : MonoBehaviour
 
     private void Update()
     {
-        if (!_expanding || _flagPosition == null)
+        if (_expanding == false|| _flagPosition == null)
             return;
 
         TryStartExpansion();
@@ -96,7 +96,7 @@ public class BaseExpansion : MonoBehaviour
         {
             Debug.Log("[BaseExpansion] Not enough resources yet.");
 
-            if (!_waitingForBuilder)
+            if (_waitingForBuilder == false)
             {
                 Debug.Log("[BaseExpansion] Not enough resources yet, setting waitingForBuilder = true");
                 _waitingForBuilder = true;
@@ -123,7 +123,7 @@ public class BaseExpansion : MonoBehaviour
             return;
         }
 
-        if (!_counter.Decrement(_resourcesToExpand))
+        if (_counter.Decrement(_resourcesToExpand) == false)
         {
             Debug.LogWarning("[BaseExpansion] Race condition: ресурсов не хватило на Decrement.");
             return;

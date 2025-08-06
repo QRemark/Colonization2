@@ -65,7 +65,7 @@ public class BaseFlow : MonoBehaviour
     {
         foreach (Unit unit in _unitSpawner.Units)
         {
-            if (!_subscribedUnits.Contains(unit) && unit.GetAssignedBase() == this.GetComponent<Base>())
+            if (_subscribedUnits.Contains(unit) == false && unit.GetAssignedBase() == this.GetComponent<Base>())
             {
                 unit.ResourceDelivered += OnUnitDelivered;
                 _subscribedUnits.Add(unit);

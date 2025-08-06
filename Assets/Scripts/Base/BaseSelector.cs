@@ -12,7 +12,8 @@ public class BaseSelector : MonoBehaviour
 
     public void OnSelectBase(InputAction.CallbackContext context)
     {
-        if (!context.performed) return;
+        if (context.performed == false) 
+            return;
 
         Ray ray = _mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
@@ -33,25 +34,6 @@ public class BaseSelector : MonoBehaviour
                     return;
                 }
 
-                //if (_unitHandler.GetUnitCountForBase(newBase) < 2)
-                //{
-                //    Debug.Log($"[BaseSelector] Базу {newBase.name} нельзя выбрать: юнитов меньше двух");
-
-                //    if (_selectedBase != null)
-                //    {
-                //        _selectedBase.SetHighlight(false);
-                //        _selectedBase.SetExpansionMode(false);
-                //        _selectedBase = null;
-                //    }
-
-                //    return;
-                //}
-
-                //if (_selectedBase != null && !_selectedBase.IsInExpansionMode)
-                //{
-                //    _selectedBase.SetExpansionMode(false);
-                //}
-
                 _selectedBase = newBase;
                 _selectedBase.SetExpansionMode(true);
                 _selectedBase.SetHighlight(true);
@@ -61,7 +43,7 @@ public class BaseSelector : MonoBehaviour
 
     public void OnPlaceFlag(InputAction.CallbackContext context)
     {
-        if (!context.performed || _selectedBase == null)
+        if (context.performed == false || _selectedBase == null)
             return;
 
         if (_baseManager.IsBaseLimitReached())
