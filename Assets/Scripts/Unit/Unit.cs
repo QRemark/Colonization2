@@ -86,20 +86,6 @@ public class Unit : MonoBehaviour
         return true;
     }
 
-    public void NotifyDelivery(Resource delivered)
-    {
-        ResourceDelivered?.Invoke(this, delivered);
-    }
-
-    public void BecomeIdle()
-    {
-        _targetResource = null;
-        IsBusy = false;
-        ReadyForNewTask = true;
-        _mover.ClearTarget();
-        BecameIdle?.Invoke(this);
-    }
-
     public void AssignToBase(Base baseRef)
     {
         _assignedBase = baseRef;
@@ -108,6 +94,20 @@ public class Unit : MonoBehaviour
     public Base GetAssignedBase()
     {
         return _assignedBase;
+    }
+
+    private void NotifyDelivery(Resource delivered)
+    {
+        ResourceDelivered?.Invoke(this, delivered);
+    }
+
+    private void BecomeIdle()
+    {
+        _targetResource = null;
+        IsBusy = false;
+        ReadyForNewTask = true;
+        _mover.ClearTarget();
+        BecameIdle?.Invoke(this);
     }
 
     private void HandleArrived()

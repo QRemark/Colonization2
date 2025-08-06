@@ -19,6 +19,12 @@ public class UnitSpawner : Spawner<Unit>
         _units = new List<Unit>();
     }
 
+    public override void ReturnToPool(Unit unit)
+    {
+        base.ReturnToPool(unit);
+        _units.Remove(unit);
+    }
+
     public Unit CreateSingleUnit(Vector3 center)
     {
         int index = _units.Count;
@@ -51,11 +57,5 @@ public class UnitSpawner : Spawner<Unit>
         }
 
         return unit;
-    }
-
-    public override void ReturnToPool(Unit unit)
-    {
-        base.ReturnToPool(unit);
-        _units.Remove(unit);
     }
 }

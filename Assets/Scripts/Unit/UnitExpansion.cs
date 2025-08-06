@@ -10,6 +10,18 @@ public class UnitExpansion : MonoBehaviour
 
     private void Update()
     {
+        HandleExpansion();
+    }
+
+    public void Init(Base baseRef, ResourceCounter counter, GlobalUnitHandler unitHandler)
+    {
+        _base = baseRef;
+        _counter = counter;
+        _globalUnitHandler = unitHandler;
+    }
+
+    private void HandleExpansion()
+    {
         if (_base.CanProduceUnits == false)
             return;
 
@@ -22,12 +34,5 @@ public class UnitExpansion : MonoBehaviour
         {
             _counter.Decrement(_resourcesPerUnit);
         }
-    }
-
-    public void Init(Base baseRef, ResourceCounter counter, GlobalUnitHandler unitHandler)
-    {
-        _base = baseRef;
-        _counter = counter;
-        _globalUnitHandler = unitHandler;
     }
 }
