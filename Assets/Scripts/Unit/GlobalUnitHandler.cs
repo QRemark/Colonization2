@@ -16,7 +16,7 @@ public class GlobalUnitHandler : MonoBehaviour
 
     public bool TryAddForBase(Vector3 position, Base ownerBase)
     {
-        int unitCount = _allUnits.Count(u => u.GetAssignedBase() == ownerBase);
+        int unitCount = _allUnits.Count(unit => unit.GetAssignedBase() == ownerBase);
 
         if (unitCount >= _maxUnitsPerBase)
             return false;

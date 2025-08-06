@@ -8,6 +8,7 @@ public class MusicPlayer : MonoBehaviour
     [SerializeField] private float _fadeDuration = 3f; 
     [SerializeField] private float _targetVolume = 1f; 
 
+    private float _defoultVolume = 0f;
     private AudioSource _audioSource;
 
     private void Awake()
@@ -17,7 +18,7 @@ public class MusicPlayer : MonoBehaviour
         _audioSource.clip = _musicClip;
         _audioSource.loop = true;
         _audioSource.playOnAwake = false;
-        _audioSource.volume = 0f;
+        _audioSource.volume = _defoultVolume;
     }
 
     private void Start()
@@ -28,12 +29,12 @@ public class MusicPlayer : MonoBehaviour
 
     private IEnumerator FadeIn()
     {
-        float elapsed = 0f;
+        float progressTime = 0f;
 
-        while (elapsed < _fadeDuration)
+        while (progressTime < _fadeDuration)
         {
-            elapsed += Time.deltaTime;
-            _audioSource.volume = Mathf.Lerp(0f, _targetVolume, elapsed / _fadeDuration);
+            progressTime += Time.deltaTime;
+            _audioSource.volume = Mathf.Lerp(_defoultVolume, _targetVolume, progressTime / _fadeDuration);
             yield return null;
         }
 

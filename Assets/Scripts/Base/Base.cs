@@ -14,7 +14,6 @@ public class Base : MonoBehaviour
     private bool _isInExpansionMode = false;
     private bool _canProduceWhileExpanding = false;
 
-    public bool IsInExpansionMode => _isInExpansionMode;
     public bool CanProduceUnits => _isInExpansionMode == false|| _canProduceWhileExpanding;
 
     private void Awake()

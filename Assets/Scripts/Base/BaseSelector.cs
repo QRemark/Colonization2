@@ -7,8 +7,11 @@ public class BaseSelector : MonoBehaviour
     [SerializeField] private LayerMask _baseLayer;
     [SerializeField] private GlobalUnitHandler _unitHandler;
     [SerializeField] private BaseManager _baseManager;
+    [SerializeField] private float _minUnitCountForExpansion = 2;
+    [SerializeField] private float _minDistanceToPlaceFlag = 50f;
 
     private Base _selectedBase;
+    private float _rayDistance = 1000f;
 
     public void OnSelectBase(InputAction.CallbackContext context)
     {
@@ -17,7 +20,7 @@ public class BaseSelector : MonoBehaviour
 
         Ray ray = _mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 1000f, _baseLayer))
+        if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance, _baseLayer))
         {
             if (hit.collider.TryGetComponent(out Base newBase))
             {
@@ -27,7 +30,7 @@ public class BaseSelector : MonoBehaviour
                     _selectedBase.SetExpansionMode(false);
                 }
 
-                if (_unitHandler.GetCountForBase(newBase) < 2)
+                if (_unitHandler.GetCountForBase(newBase) < _minUnitCountForExpansion)
                 {
                     _selectedBase = null;
                     return;
@@ -53,7 +56,7 @@ public class BaseSelector : MonoBehaviour
             return;
         }
 
-        if (_unitHandler.GetCountForBase(_selectedBase) < 2)
+        if (_unitHandler.GetCountForBase(_selectedBase) < _minUnitCountForExpansion)
         {
             _selectedBase.SetExpansionMode(false);
             _selectedBase = null;
@@ -62,12 +65,11 @@ public class BaseSelector : MonoBehaviour
 
         Ray ray = _mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
+        if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance))
         {
             Vector3 flagPosition = hit.point;
 
-            const float minDistance = 50f;
-            Collider[] nearBases = Physics.OverlapSphere(flagPosition, minDistance, _baseLayer);
+            Collider[] nearBases = Physics.OverlapSphere(flagPosition, _minDistanceToPlaceFlag, _baseLayer);
 
             foreach (Collider collider in nearBases)
             {

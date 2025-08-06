@@ -13,6 +13,7 @@ public class ResourceSpawner : Spawner<Resource>
     [SerializeField] private ResourceStorage _resourceStorage;
 
     private float _timer;
+    private float _defoultTimer = 0f;
     private Quaternion _defaultRotation = Quaternion.identity;
 
     private void Update()
@@ -32,7 +33,7 @@ public class ResourceSpawner : Spawner<Resource>
 
         if (_timer >= _spawnInterval)
         {
-            _timer = 0f;
+            _timer = _defoultTimer;
             SpawnAndRegister();
         }
     }

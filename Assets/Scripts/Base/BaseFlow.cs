@@ -13,15 +13,19 @@ public class BaseFlow : MonoBehaviour
     private UnitSpawner _unitSpawner;
     private ResourceStorage _resourceStorage;
 
-    private readonly Dictionary<Resource, Unit> _activeTasks = new();
-    private readonly List<Unit> _subscribedUnits = new();
-    private List<Resource> _availableResources = new();
+    private Dictionary<Resource, Unit> _activeTasks;
+    private List<Unit> _subscribedUnits;
+    private List<Resource> _availableResources;
 
     private Base _base;
 
     private void Awake()
     {
         _base = GetComponent<Base>();
+
+        _activeTasks = new Dictionary<Resource, Unit>();
+        _subscribedUnits = new List<Unit>();
+        _availableResources = new List<Resource>();
     }
 
     public void Init(UnitSpawner unitSpawner, ResourceStorage resourceStorage, Base baseRef)
@@ -58,7 +62,7 @@ public class BaseFlow : MonoBehaviour
             .Where(resource => _resourceStorage.AvailableResources.Contains(resource))
             .ToList();
 
-        var ownUnits = _unitSpawner.Units
+        List<Unit> ownUnits = _unitSpawner.Units
             .Where(unit => unit.GetAssignedBase() == _base)
             .ToList();
 

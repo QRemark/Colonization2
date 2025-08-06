@@ -7,6 +7,8 @@ public class UnitSpawner : Spawner<Unit>
     [SerializeField] private float _angleStepDegrees = 30f;
     [SerializeField] private float _yOffset = 0f;
 
+    private Quaternion _defaultRotation = Quaternion.identity;
+    private Vector3 _zeroVelocity = Vector3.zero;
     private List<Unit> _units;
     
     public IEnumerable<Unit> Units => _units;
@@ -27,7 +29,8 @@ public class UnitSpawner : Spawner<Unit>
         Vector3 offset = new Vector3(offsetX, _yOffset, offsetZ);
         Vector3 spawnPosition = center + offset;
 
-        Unit unit = SpawnObject(spawnPosition, Quaternion.identity);
+        Unit unit = SpawnObject(spawnPosition, _defaultRotation);
+
         if (unit != null)
         {
             unit.gameObject.SetActive(true);
@@ -35,8 +38,8 @@ public class UnitSpawner : Spawner<Unit>
             if (unit.TryGetComponent(out Rigidbody rigidbody))
             {
                 rigidbody.position = spawnPosition;
-                rigidbody.linearVelocity = Vector3.zero;
-                rigidbody.angularVelocity = Vector3.zero;
+                rigidbody.linearVelocity = _zeroVelocity;
+                rigidbody.angularVelocity = _zeroVelocity;
             }
             else
             {

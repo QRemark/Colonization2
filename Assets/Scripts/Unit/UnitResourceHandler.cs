@@ -5,6 +5,7 @@ public class UnitResourceHandler : MonoBehaviour
     [SerializeField] private float _pickupHeightOffset = 6f;
     [SerializeField] private float _deliveryRadius = 2f;
 
+    private float _defoulktOffcet = 0;
     private Resource _carriedResource;
 
     public void SetCarriedResource(Resource resource)
@@ -31,7 +32,7 @@ public class UnitResourceHandler : MonoBehaviour
         }
 
         _carriedResource.transform.SetParent(transform);
-        _carriedResource.transform.localPosition = new Vector3(0, _pickupHeightOffset, 0);
+        _carriedResource.transform.localPosition = new Vector3(_defoulktOffcet, _pickupHeightOffset, _defoulktOffcet);
 
         return true;
     }

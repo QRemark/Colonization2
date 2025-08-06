@@ -1,5 +1,6 @@
-using UnityEngine;
+using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class BaseExpansion : MonoBehaviour
 {
@@ -15,8 +16,12 @@ public class BaseExpansion : MonoBehaviour
     private GlobalUnitHandler _unitHandler;
     private BaseManager _baseManager;
 
+    private Quaternion _defaultRotation = Quaternion.identity;
     private GameObject _flagInstance;
     private bool _isLocked = false;
+
+    private float _minDistanceToBuild = 7f;
+
     public bool IsLocked => _isLocked;
 
     public void Init(Base baseRef, ResourceCounter counter, GlobalUnitHandler unitHandler, BaseManager baseManager)
@@ -46,10 +51,9 @@ public class BaseExpansion : MonoBehaviour
         _expanding = true;
         _waitingForBuilder = false;
 
-        _flagInstance = Instantiate(_flagPrefab, position, Quaternion.identity);
+        _flagInstance = Instantiate(_flagPrefab, position, _defaultRotation);
         _base.SetExpansionMode(true);
     }
-
 
     public void OnUnitIdleFromThisBase(Unit unit)
     {
@@ -89,8 +93,8 @@ public class BaseExpansion : MonoBehaviour
             return;
         }
 
-        var ownIdleUnits = _unitHandler.GetAll()
-            .Where(u => u.GetAssignedBase() == _base && u.ReadyForNewTask)
+        List<Unit> ownIdleUnits = _unitHandler.GetAll()
+            .Where(unit => unit.GetAssignedBase() == _base && unit.ReadyForNewTask)
             .ToList();
 
         Unit builder = ownIdleUnits.FirstOrDefault();
@@ -119,7 +123,8 @@ public class BaseExpansion : MonoBehaviour
     private void BuildNew(Unit unit)
     {
         float distance = Vector3.Distance(unit.transform.position, _flagPosition.Value);
-        if (distance > 7f)
+
+        if (distance > _minDistanceToBuild)
         {
             return;
         }

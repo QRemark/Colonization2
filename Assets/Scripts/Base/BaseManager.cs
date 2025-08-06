@@ -11,13 +11,10 @@ public class BaseManager : MonoBehaviour
 
     private  List<Base> _allBases;
 
-    public IReadOnlyList<Base> GetAllBases() => _allBases;
-
     private void Awake()
     {
         _allBases = new List<Base>();
     }
-
 
     public void Register(Base baseRef)
     {
@@ -33,6 +30,7 @@ public class BaseManager : MonoBehaviour
     private void CreateInitial(Vector3 position)
     {
         Base baseComponent = _baseSpawner.Create(position);
+
         if (baseComponent == null)
             return;
 
@@ -41,12 +39,7 @@ public class BaseManager : MonoBehaviour
             return;
         }
 
-        baseComponent.Init(
-            unitSpawner,
-            _resourceStorage,
-            _globalUnitHandler,
-            this
-        );
+        baseComponent.Init(unitSpawner, _resourceStorage, _globalUnitHandler, this);
 
         for (int i = 0; i < _initialUnitCount; i++)
         {
@@ -55,7 +48,6 @@ public class BaseManager : MonoBehaviour
 
         Register(baseComponent);
     }
-
 
     public bool IsLimitReached()
     {
@@ -74,16 +66,9 @@ public class BaseManager : MonoBehaviour
             return;
         }
 
-        newBase.Init(
-            unitSpawner,
-            _resourceStorage,
-            _globalUnitHandler,
-            this
-        );
+        newBase.Init(unitSpawner, _resourceStorage, _globalUnitHandler, this);
 
         Register(newBase);
         _globalUnitHandler.TransferToBase(builder, newBase, position);
     }
-
-
 }
