@@ -16,6 +16,8 @@ public class BaseExpansion : MonoBehaviour
     private GlobalUnitHandler _unitHandler;
     private GlobalBaseHandler _baseHandler;
 
+    private bool _slotReserved = false;
+
     public bool IsLocked => _isLocked;
 
     private void Update()
@@ -38,12 +40,16 @@ public class BaseExpansion : MonoBehaviour
 
     public void SetFlag(Vector3 position)
     {
-        if (_isLocked)
+        if (_isLocked || _slotReserved)
+            return;
+
+        if (_baseHandler.TryReserveBaseSlot() == false)
             return;
 
         _flagPlacer.PlaceFlag(position);
         _expanding = true;
         _waitingForBuilder = false;
+        _slotReserved = true;
 
         _base.SetExpansionMode(true);
     }
@@ -122,7 +128,10 @@ public class BaseExpansion : MonoBehaviour
         float distance = Vector3.Distance(unit.transform.position, targetPos);
 
         if (distance > _minDistanceToBuild)
+        {
+            _baseHandler.ReleaseReservedSlot();
             return;
+        }
 
         _baseHandler.CreateNew(targetPos, unit);
         unit.OnArrived -= BuildNewBase;
@@ -130,16 +139,17 @@ public class BaseExpansion : MonoBehaviour
         _flagPlacer.ClearFlag();
         _expanding = false;
         _isLocked = false;
+        _slotReserved = false;
 
         _base.SetExpansionMode(false);
     }
 
+
     private void OnDestroy()
     {
-        if (_counter != null)
-        {
-            _counter.CountChanged -= OnResourceCountChanged;
-        }
-    }
+        _counter.CountChanged -= OnResourceCountChanged;
 
+        if (_slotReserved)
+            _baseHandler.ReleaseReservedSlot();
+    }
 }

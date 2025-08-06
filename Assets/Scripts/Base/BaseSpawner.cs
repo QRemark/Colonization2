@@ -30,4 +30,10 @@ public class BaseSpawner : Spawner<Base>
     }
 
     public bool IsLimitReached() => _currentBaseCount >= _initialSize;
+
+    public int GetMaxBaseCount()
+    {
+        return _initialSize;
+    }
+
 }
