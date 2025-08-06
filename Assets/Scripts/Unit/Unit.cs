@@ -117,4 +117,9 @@ public class Unit : MonoBehaviour
 
         OnArrived?.Invoke(this);
     }
+
+    private void OnDestroy()
+    {
+        _mover.OnArrived -= HandleArrived;
+    }
 }

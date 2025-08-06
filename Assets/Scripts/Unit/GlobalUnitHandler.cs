@@ -28,7 +28,7 @@ public class GlobalUnitHandler : MonoBehaviour
 
         _allUnits.Add(unit);
         unit.AssignToBase(ownerBase);
-        ownerBase.OnUnitSpawned(unit);
+        ownerBase.SubscribeToUnit(unit);
 
         return true;
     }
@@ -41,7 +41,7 @@ public class GlobalUnitHandler : MonoBehaviour
         {
             _allUnits.Add(unit);
             unit.AssignToBase(ownerBase);
-            ownerBase.OnUnitSpawned(unit);
+            ownerBase.SubscribeToUnit(unit);
         }
 
         return unit;
@@ -49,9 +49,17 @@ public class GlobalUnitHandler : MonoBehaviour
 
     public void TransferToBase(Unit unit, Base newBase, Vector3 newBasePosition)
     {
+        Base oldBase = unit.GetAssignedBase();
+
+        if (oldBase != null)
+            oldBase.UnsubscribeFromUnit(unit);
+
         unit.AssignToBase(newBase);
         unit.Initialize(newBasePosition);
+
+        newBase.SubscribeToUnit(unit);
     }
+
 
     public List<Unit> GetAll()
     {

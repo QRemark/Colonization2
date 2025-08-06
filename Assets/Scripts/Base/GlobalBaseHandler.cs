@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseManager : MonoBehaviour
+public class GlobalBaseHandler : MonoBehaviour
 {
     [SerializeField] private BaseSpawner _baseSpawner;
     [SerializeField] private Transform _initialBasePosition;

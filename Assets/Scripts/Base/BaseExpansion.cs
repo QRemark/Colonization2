@@ -14,7 +14,7 @@ public class BaseExpansion : MonoBehaviour
     private Base _base;
     private ResourceCounter _counter;
     private GlobalUnitHandler _unitHandler;
-    private BaseManager _baseManager;
+    private GlobalBaseHandler _baseHandler;
 
     public bool IsLocked => _isLocked;
 
@@ -26,12 +26,12 @@ public class BaseExpansion : MonoBehaviour
         }
     }
 
-    public void Init(Base baseRef, ResourceCounter counter, GlobalUnitHandler unitHandler, BaseManager baseManager)
+    public void Init(Base baseRef, ResourceCounter counter, GlobalUnitHandler unitHandler, GlobalBaseHandler baseHandler)
     {
         _base = baseRef;
         _counter = counter;
         _unitHandler = unitHandler;
-        _baseManager = baseManager;
+        _baseHandler = baseHandler;
 
         _counter.CountChanged += OnResourceCountChanged;
     }
@@ -124,7 +124,7 @@ public class BaseExpansion : MonoBehaviour
         if (distance > _minDistanceToBuild)
             return;
 
-        _baseManager.CreateNew(targetPos, unit);
+        _baseHandler.CreateNew(targetPos, unit);
         unit.OnArrived -= BuildNewBase;
 
         _flagPlacer.ClearFlag();
@@ -133,4 +133,13 @@ public class BaseExpansion : MonoBehaviour
 
         _base.SetExpansionMode(false);
     }
+
+    private void OnDestroy()
+    {
+        if (_counter != null)
+        {
+            _counter.CountChanged -= OnResourceCountChanged;
+        }
+    }
+
 }

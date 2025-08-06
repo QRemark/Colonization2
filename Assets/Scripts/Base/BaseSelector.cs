@@ -6,7 +6,7 @@ public class BaseSelector : MonoBehaviour
     [SerializeField] private Camera _mainCamera;
     [SerializeField] private LayerMask _baseLayer;
     [SerializeField] private GlobalUnitHandler _unitHandler;
-    [SerializeField] private BaseManager _baseManager;
+    [SerializeField] private GlobalBaseHandler _baseHandler;
     [SerializeField] private float _minUnitCountForExpansion = 2;
     [SerializeField] private float _minDistanceToPlaceFlag = 50f;
 
@@ -39,7 +39,7 @@ public class BaseSelector : MonoBehaviour
         if (context.performed == false || _selectedBase == null)
             return;
 
-        if (_baseManager.IsLimitReached())
+        if (_baseHandler.IsLimitReached())
         {
             DeselectBase();
             return;

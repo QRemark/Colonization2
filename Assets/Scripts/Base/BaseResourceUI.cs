@@ -4,7 +4,7 @@ using UnityEngine;
 public class BaseResourceUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _text;
-    [SerializeField]private float _maxWriteCount = 99f;
+    [SerializeField] private float _maxWriteCount = 99f;
 
     public void Initialize(ResourceCounter counter)
     {

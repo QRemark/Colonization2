@@ -43,6 +43,8 @@ public class BaseFlow : MonoBehaviour
     private void OnDestroy()
     {
         _scanner.ResourcesUpdated -= OnResourcesUpdated;
+        _resourceCounter.CountChanged -= _base.OnResourceCountChanged;
+
         UnsubscribeAllUnits();
 
         _availableResources.Clear();

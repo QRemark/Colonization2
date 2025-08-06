@@ -21,12 +21,12 @@ public class Base : MonoBehaviour
         _renderer.material = new Material(_renderer.material);
     }
 
-    public void Init(UnitSpawner unitSpawner, ResourceStorage resourceStorage, GlobalUnitHandler globalUnitHandler, BaseManager baseManager)
+    public void Init(UnitSpawner unitSpawner, ResourceStorage resourceStorage, GlobalUnitHandler globalUnitHandler, GlobalBaseHandler baseHandler)
     {
         _flow.Init(unitSpawner, resourceStorage, this);
 
         _unitExpansion.Init(this, _resourceCounter, globalUnitHandler);
-        _baseExpansion.Init(this, _resourceCounter, globalUnitHandler, baseManager);
+        _baseExpansion.Init(this, _resourceCounter, globalUnitHandler, baseHandler);
     }
 
     public void SetHighlight(bool isHighlighted)
@@ -58,10 +58,16 @@ public class Base : MonoBehaviour
         _baseExpansion.SetFlag(position);
     }
 
-    public void OnUnitSpawned(Unit unit)
+    public void SubscribeToUnit(Unit unit)
     {
         unit.BecameIdle += HandleUnitBecameIdle;
     }
+
+    public void UnsubscribeFromUnit(Unit unit)
+    {
+        unit.BecameIdle -= HandleUnitBecameIdle;
+    }
+
 
     private void HandleUnitBecameIdle(Unit unit)
     {
