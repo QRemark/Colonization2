@@ -28,5 +28,4 @@ public class ResourceCounter : MonoBehaviour
         CountChanged?.Invoke(_count);
         return true;
     }
-
 }

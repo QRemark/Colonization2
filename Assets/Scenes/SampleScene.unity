@@ -155,6 +155,8 @@ MonoBehaviour:
     m_Bits: 512
   _unitHandler: {fileID: 1604258033}
   _baseManager: {fileID: 1221934812}
+  _minUnitCountForExpansion: 2
+  _minDistanceToPlaceFlag: 50
 --- !u!114 &44381815
 MonoBehaviour:
   m_ObjectHideFlags: 0

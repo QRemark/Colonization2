@@ -16,37 +16,15 @@ public class BaseManager : MonoBehaviour
         _allBases = new List<Base>();
     }
 
-    public void Register(Base baseRef)
-    {
-        if (_allBases.Contains(baseRef) == false)
-            _allBases.Add(baseRef);
-    }
-
     private void Start()
     {
         CreateInitial(_initialBasePosition.position);
     }
 
-    private void CreateInitial(Vector3 position)
+    public void Register(Base baseRef)
     {
-        Base baseComponent = _baseSpawner.Create(position);
-
-        if (baseComponent == null)
-            return;
-
-        if (_globalUnitHandler.TryGetComponent(out UnitSpawner unitSpawner) == false)
-        {
-            return;
-        }
-
-        baseComponent.Init(unitSpawner, _resourceStorage, _globalUnitHandler, this);
-
-        for (int i = 0; i < _initialUnitCount; i++)
-        {
-            _globalUnitHandler.SpawnForBase(position, baseComponent);
-        }
-
-        Register(baseComponent);
+        if (_allBases.Contains(baseRef) == false)
+            _allBases.Add(baseRef);
     }
 
     public bool IsLimitReached()
@@ -56,19 +34,40 @@ public class BaseManager : MonoBehaviour
 
     public void CreateNew(Vector3 position, Unit builder)
     {
-        Base newBase = _baseSpawner.Create(position);
+        Base newBase = InitializeBase(position);
 
         if (newBase == null)
             return;
 
-        if (_globalUnitHandler.TryGetComponent(out UnitSpawner unitSpawner) == false)
-        {
-            return;
-        }
-
-        newBase.Init(unitSpawner, _resourceStorage, _globalUnitHandler, this);
-
-        Register(newBase);
         _globalUnitHandler.TransferToBase(builder, newBase, position);
+    }
+
+    private void CreateInitial(Vector3 position)
+    {
+        Base initialBase = InitializeBase(position);
+
+        if (initialBase == null)
+            return;
+
+        for (int i = 0; i < _initialUnitCount; i++)
+        {
+            _globalUnitHandler.SpawnForBase(position, initialBase);
+        }
+    }
+
+    private Base InitializeBase(Vector3 position)
+    {
+        Base baseComponent = _baseSpawner.Create(position);
+
+        if (baseComponent == null)
+            return null;
+
+        if (_globalUnitHandler.TryGetComponent(out UnitSpawner unitSpawner) == false)
+            return null;
+
+        baseComponent.Init(unitSpawner, _resourceStorage, _globalUnitHandler, this);
+        Register(baseComponent);
+
+        return baseComponent;
     }
 }

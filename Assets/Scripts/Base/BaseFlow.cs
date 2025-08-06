@@ -43,13 +43,8 @@ public class BaseFlow : MonoBehaviour
     private void OnDestroy()
     {
         _scanner.ResourcesUpdated -= OnResourcesUpdated;
+        UnsubscribeAllUnits();
 
-        foreach (Unit unit in _subscribedUnits)
-        {
-            unit.ResourceDelivered -= OnUnitDelivered;
-        }
-
-        _subscribedUnits.Clear();
         _availableResources.Clear();
         _activeTasks.Clear();
     }
@@ -58,9 +53,7 @@ public class BaseFlow : MonoBehaviour
     {
         CheckUnits();
 
-        _availableResources = scannedResources
-            .Where(resource => _resourceStorage.AvailableResources.Contains(resource))
-            .ToList();
+        _availableResources = FilterAvailableResources(scannedResources);
 
         List<Unit> ownUnits = _unitSpawner.Units
             .Where(unit => unit.GetAssignedBase() == _base)
@@ -92,4 +85,18 @@ public class BaseFlow : MonoBehaviour
         resource.Collect();
     }
 
+    private List<Resource> FilterAvailableResources(List<Resource> scanned)
+    {
+        return scanned
+            .Where(resource => _resourceStorage.AvailableResources.Contains(resource))
+            .ToList();
+    }
+
+    private void UnsubscribeAllUnits()
+    {
+        foreach (Unit unit in _subscribedUnits)
+            unit.ResourceDelivered -= OnUnitDelivered;
+
+        _subscribedUnits.Clear();
+    }
 }

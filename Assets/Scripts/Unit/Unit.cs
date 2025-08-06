@@ -23,13 +23,6 @@ public class Unit : MonoBehaviour
     public event Action<Unit> OnArrived;
     public event Action<Unit> BecameIdle;
 
-    public void Initialize(Vector3 position)
-    {
-        _basePosition = position;
-        IsBusy = false;
-        ReadyForNewTask = true;
-    }
-
     private void Awake()
     {
         _mover = GetComponent<UnitMover>();
@@ -58,12 +51,11 @@ public class Unit : MonoBehaviour
         }
     }
 
-    private void HandleArrived()
+    public void Initialize(Vector3 position)
     {
-        if (_isBuildingBase)
-            _isBuildingBase = false;
-
-        OnArrived?.Invoke(this);
+        _basePosition = position;
+        IsBusy = false;
+        ReadyForNewTask = true;
     }
 
     public void StartBaseBuildingTask(Vector3 position)
@@ -116,5 +108,13 @@ public class Unit : MonoBehaviour
     public Base GetAssignedBase()
     {
         return _assignedBase;
+    }
+
+    private void HandleArrived()
+    {
+        if (_isBuildingBase)
+            _isBuildingBase = false;
+
+        OnArrived?.Invoke(this);
     }
 }

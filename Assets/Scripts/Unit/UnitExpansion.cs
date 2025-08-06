@@ -8,13 +8,6 @@ public class UnitExpansion : MonoBehaviour
     private ResourceCounter _counter;
     private GlobalUnitHandler _globalUnitHandler;
 
-    public void Init(Base baseRef, ResourceCounter counter, GlobalUnitHandler unitHandler)
-    {
-        _base = baseRef;
-        _counter = counter;
-        _globalUnitHandler = unitHandler;
-    }
-
     private void Update()
     {
         if (_base.CanProduceUnits == false)
@@ -31,4 +24,10 @@ public class UnitExpansion : MonoBehaviour
         }
     }
 
+    public void Init(Base baseRef, ResourceCounter counter, GlobalUnitHandler unitHandler)
+    {
+        _base = baseRef;
+        _counter = counter;
+        _globalUnitHandler = unitHandler;
+    }
 }

@@ -5228,6 +5228,7 @@ GameObject:
   - component: {fileID: 3487341380643148975}
   - component: {fileID: 2454854338420596181}
   - component: {fileID: 3183777606730924507}
+  - component: {fileID: -5606447770909144730}
   m_Layer: 9
   m_Name: Base
   m_TagString: Untagged
@@ -5453,4 +5454,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _resourcesToExpand: 5
+  _minDistanceToBuild: 7
+  _flagPlacer: {fileID: -5606447770909144730}
+--- !u!114 &-5606447770909144730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8592520556902493004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08bc286e80429dd4abac60a674ef3e6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   _flagPrefab: {fileID: 3103386592490719648, guid: 6f316256c1c93544fb286c793e742bd3, type: 3}

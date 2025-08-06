@@ -1,28 +1,30 @@
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class BaseExpansion : MonoBehaviour
 {
     [SerializeField] private int _resourcesToExpand = 5;
-    [SerializeField] private GameObject _flagPrefab;
+    [SerializeField] private float _minDistanceToBuild = 7f;
+    [SerializeField] private FlagPlacer _flagPlacer;
 
-    private Vector3? _flagPosition;
     private bool _expanding = false;
     private bool _waitingForBuilder = false;
+    private bool _isLocked = false;
 
     private Base _base;
     private ResourceCounter _counter;
     private GlobalUnitHandler _unitHandler;
     private BaseManager _baseManager;
 
-    private Quaternion _defaultRotation = Quaternion.identity;
-    private GameObject _flagInstance;
-    private bool _isLocked = false;
-
-    private float _minDistanceToBuild = 7f;
-
     public bool IsLocked => _isLocked;
+
+    private void Update()
+    {
+        if (_expanding && _flagPlacer.HasFlag)
+        {
+            TryStartExpansion();
+        }
+    }
 
     public void Init(Base baseRef, ResourceCounter counter, GlobalUnitHandler unitHandler, BaseManager baseManager)
     {
@@ -37,67 +39,40 @@ public class BaseExpansion : MonoBehaviour
     public void SetFlag(Vector3 position)
     {
         if (_isLocked)
-        {
             return;
-        }
 
-        if (_flagInstance != null)
-        {
-            Destroy(_flagInstance);
-            _flagInstance = null;
-        }
-
-        _flagPosition = position;
+        _flagPlacer.PlaceFlag(position);
         _expanding = true;
         _waitingForBuilder = false;
 
-        _flagInstance = Instantiate(_flagPrefab, position, _defaultRotation);
         _base.SetExpansionMode(true);
     }
 
     public void OnUnitIdleFromThisBase(Unit unit)
     {
-        if (_waitingForBuilder  == false|| _expanding == false|| _flagPosition == null)
+        if (_waitingForBuilder && _expanding && _flagPlacer.HasFlag)
         {
-            return;
+            TryStartExpansion();
         }
-
-        TryStart();
-    }
-
-    private void Update()
-    {
-        if (_expanding == false|| _flagPosition == null)
-            return;
-
-        TryStart();
     }
 
     public void OnResourceCountChanged(int newCount)
     {
-        if (_waitingForBuilder && _flagPosition != null && _expanding)
+        if (_waitingForBuilder && _expanding && _flagPlacer.HasFlag)
         {
-            TryStart();
+            TryStartExpansion();
         }
     }
 
-    private void TryStart()
+    private void TryStartExpansion()
     {
-        if (_counter.Count < _resourcesToExpand)
+        if (HasEnoughResources() == false)
         {
-            if (_waitingForBuilder == false)
-            {
-                _waitingForBuilder = true;
-            }
-
+            _waitingForBuilder = true;
             return;
         }
 
-        List<Unit> ownIdleUnits = _unitHandler.GetAll()
-            .Where(unit => unit.GetAssignedBase() == _base && unit.ReadyForNewTask)
-            .ToList();
-
-        Unit builder = ownIdleUnits.FirstOrDefault();
+        Unit builder = FindIdleBuilder();
 
         if (builder == null)
         {
@@ -106,12 +81,30 @@ public class BaseExpansion : MonoBehaviour
         }
 
         if (_counter.Decrement(_resourcesToExpand) == false)
-        {
             return;
-        }
 
-        builder.StartBaseBuildingTask(_flagPosition.Value);
-        builder.OnArrived += BuildNew;
+        StartExpansion(builder);
+    }
+
+    private bool HasEnoughResources()
+    {
+        return _counter.Count >= _resourcesToExpand;
+    }
+
+    private Unit FindIdleBuilder()
+    {
+        return _unitHandler.GetAll()
+            .FirstOrDefault(unit =>
+                unit.GetAssignedBase() == _base &&
+                unit.ReadyForNewTask);
+    }
+
+    private void StartExpansion(Unit builder)
+    {
+        Vector3 targetPos = _flagPlacer.FlagPosition.Value;
+
+        builder.StartBaseBuildingTask(targetPos);
+        builder.OnArrived += BuildNewBase;
 
         _isLocked = true;
         _expanding = false;
@@ -120,23 +113,24 @@ public class BaseExpansion : MonoBehaviour
         _base.NotifyBuilderSent();
     }
 
-    private void BuildNew(Unit unit)
+    private void BuildNewBase(Unit unit)
     {
-        float distance = Vector3.Distance(unit.transform.position, _flagPosition.Value);
+        if (_flagPlacer.HasFlag == false)
+            return;
+
+        Vector3 targetPos = _flagPlacer.FlagPosition.Value;
+        float distance = Vector3.Distance(unit.transform.position, targetPos);
 
         if (distance > _minDistanceToBuild)
-        {
             return;
-        }
 
-        _baseManager.CreateNew(_flagPosition.Value, unit);
-        unit.OnArrived -= BuildNew;
+        _baseManager.CreateNew(targetPos, unit);
+        unit.OnArrived -= BuildNewBase;
 
-        Destroy(_flagInstance);
-        _flagInstance = null;
-        _flagPosition = null;
+        _flagPlacer.ClearFlag();
         _expanding = false;
         _isLocked = false;
+
         _base.SetExpansionMode(false);
     }
 }
