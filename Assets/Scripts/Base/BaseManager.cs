@@ -33,8 +33,16 @@ public class BaseManager : MonoBehaviour
     private void CreateInitial(Vector3 position)
     {
         Base baseComponent = _baseSpawner.Create(position);
+        if (baseComponent == null)
+            return;
+
+        if (_globalUnitHandler.TryGetComponent(out UnitSpawner unitSpawner) == false)
+        {
+            return;
+        }
+
         baseComponent.Init(
-            _globalUnitHandler.GetComponent<UnitSpawner>(),
+            unitSpawner,
             _resourceStorage,
             _globalUnitHandler,
             this
@@ -48,6 +56,7 @@ public class BaseManager : MonoBehaviour
         Register(baseComponent);
     }
 
+
     public bool IsLimitReached()
     {
         return _baseSpawner.IsLimitReached();
@@ -58,13 +67,15 @@ public class BaseManager : MonoBehaviour
         Base newBase = _baseSpawner.Create(position);
 
         if (newBase == null)
+            return;
+
+        if (_globalUnitHandler.TryGetComponent(out UnitSpawner unitSpawner) == false)
         {
-            Debug.LogError("[BaseManager] Ќе удалось создать базу: достигнут лимит.");
             return;
         }
 
         newBase.Init(
-            _globalUnitHandler.GetComponent<UnitSpawner>(),
+            unitSpawner,
             _resourceStorage,
             _globalUnitHandler,
             this
@@ -73,5 +84,6 @@ public class BaseManager : MonoBehaviour
         Register(newBase);
         _globalUnitHandler.TransferToBase(builder, newBase, position);
     }
+
 
 }

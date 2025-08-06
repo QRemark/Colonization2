@@ -50,7 +50,6 @@ public class Base : MonoBehaviour
 
     public void NotifyBuilderSent()
     {
-        Debug.Log("[Base] Юнит отправлен, разрешаем производство во время расширения.");
         _canProduceWhileExpanding = true;
         _unitExpansion.enabled = true;
     }
@@ -67,8 +66,6 @@ public class Base : MonoBehaviour
 
     private void HandleUnitBecameIdle(Unit unit)
     {
-        Debug.Log($"[Base] Пойман BecameIdle от {unit.name}, база {_baseExpansion.name}, isInExpansionMode: {_isInExpansionMode}");
-
         if (_isInExpansionMode)
         {
             _baseExpansion.OnUnitIdleFromThisBase(unit);

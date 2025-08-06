@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[RequireComponent(typeof(Base))]
 public class BaseFlow : MonoBehaviour
 {
     [SerializeField] private ResourceScanScheduler _scanner;
@@ -17,6 +18,11 @@ public class BaseFlow : MonoBehaviour
     private List<Resource> _availableResources = new();
 
     private Base _base;
+
+    private void Awake()
+    {
+        _base = GetComponent<Base>();
+    }
 
     public void Init(UnitSpawner unitSpawner, ResourceStorage resourceStorage, Base baseRef)
     {
@@ -63,7 +69,7 @@ public class BaseFlow : MonoBehaviour
     {
         foreach (Unit unit in _unitSpawner.Units)
         {
-            if (_subscribedUnits.Contains(unit) == false && unit.GetAssignedBase() == this.GetComponent<Base>())
+            if (_subscribedUnits.Contains(unit) == false && unit.GetAssignedBase() == _base)
             {
                 unit.ResourceDelivered += OnUnitDelivered;
                 _subscribedUnits.Add(unit);
@@ -73,12 +79,13 @@ public class BaseFlow : MonoBehaviour
 
     private void OnUnitDelivered(Unit unit, Resource resource)
     {
-        if (unit.GetAssignedBase() != this.GetComponent<Base>())
-            return; 
+        if (unit.GetAssignedBase() != _base)
+            return;
 
         _activeTasks.Remove(resource);
         _resourceStorage.Unregist(resource);
         _resourceCounter.Increment();
         resource.Collect();
     }
+
 }

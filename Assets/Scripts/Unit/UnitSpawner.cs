@@ -32,11 +32,11 @@ public class UnitSpawner : Spawner<Unit>
         {
             unit.gameObject.SetActive(true);
 
-            if (unit.TryGetComponent(out Rigidbody rb))
+            if (unit.TryGetComponent(out Rigidbody rigidbody))
             {
-                rb.position = spawnPosition;
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
+                rigidbody.position = spawnPosition;
+                rigidbody.linearVelocity = Vector3.zero;
+                rigidbody.angularVelocity = Vector3.zero;
             }
             else
             {

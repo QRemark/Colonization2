@@ -11,7 +11,6 @@ public class BaseSpawner : Spawner<Base>
     {
         if (_currentBaseCount >= _initialSize)
         {
-            Debug.LogWarning("[BaseSpawner] Достигнут лимит баз.");
             return null;
         }
 

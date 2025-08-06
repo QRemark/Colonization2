@@ -29,7 +29,6 @@ public class BaseSelector : MonoBehaviour
 
                 if (_unitHandler.GetCountForBase(newBase) < 2)
                 {
-                    Debug.Log("Нельзя выбрать");
                     _selectedBase = null;
                     return;
                 }
@@ -48,7 +47,6 @@ public class BaseSelector : MonoBehaviour
 
         if (_baseManager.IsLimitReached())
         {
-            Debug.Log("[BaseSelector] Установка флагов заблокирована из-за лимита.");
             _selectedBase?.SetHighlight(false);
             _selectedBase?.SetExpansionMode(false);
             _selectedBase = null;
@@ -57,8 +55,6 @@ public class BaseSelector : MonoBehaviour
 
         if (_unitHandler.GetCountForBase(_selectedBase) < 2)
         {
-            Debug.Log("[BaseSelector] Недостаточно юнитов для колонизации. Сброс выделения.");
-
             _selectedBase.SetExpansionMode(false);
             _selectedBase = null;
             return;
@@ -73,20 +69,14 @@ public class BaseSelector : MonoBehaviour
             const float minDistance = 50f;
             Collider[] nearBases = Physics.OverlapSphere(flagPosition, minDistance, _baseLayer);
 
-            Debug.Log($"[DEBUG] OverlapSphere hit count: {nearBases.Length}");
-
-            foreach (var col in nearBases)
+            foreach (Collider collider in nearBases)
             {
-                Base otherBase = col.GetComponent<Base>();
-
-                if (otherBase == null)
+                if (collider.TryGetComponent(out Base otherBase) == false)
                     continue;
-
-                Debug.Log($"[BaseSelector] Слишком близко к базе {otherBase.name}. Сброс.");
 
                 if (_selectedBase != null)
                 {
-                    _selectedBase.SetHighlight(false);  
+                    _selectedBase.SetHighlight(false);
                     _selectedBase.SetExpansionMode(false);
                     _selectedBase = null;
                 }
@@ -96,7 +86,6 @@ public class BaseSelector : MonoBehaviour
 
             if (_selectedBase.TryGetComponent(out BaseExpansion expansion) && expansion.IsLocked)
             {
-                Debug.Log("[BaseSelector] База заблокирована, пока идёт строительство.");
                 return;
             }
 
