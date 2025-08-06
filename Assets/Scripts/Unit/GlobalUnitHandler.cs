@@ -14,25 +14,28 @@ public class GlobalUnitHandler : MonoBehaviour
         _allUnits = new List<Unit>();
     }
 
-    public bool TrySpawnUnitForBase(Vector3 position, Base ownerBase)
+    public bool TryAddForBase(Vector3 position, Base ownerBase)
     {
         int unitCount = _allUnits.Count(u => u.GetAssignedBase() == ownerBase);
+
         if (unitCount >= _maxUnitsPerBase)
             return false;
 
-        Unit unit = _unitSpawner.SpawnUnit(position);
+        Unit unit = _unitSpawner.CreateSingleUnit(position);
+
         if (unit == null)
             return false;
 
         _allUnits.Add(unit);
         unit.AssignToBase(ownerBase);
         ownerBase.OnUnitSpawned(unit);
+
         return true;
     }
 
-    public Unit SpawnUnitForBase(Vector3 position, Base ownerBase)
+    public Unit SpawnForBase(Vector3 position, Base ownerBase)
     {
-        Unit unit = _unitSpawner.SpawnUnit(position);
+        Unit unit = _unitSpawner.CreateSingleUnit(position);
 
         if (unit != null)
         {
@@ -44,19 +47,19 @@ public class GlobalUnitHandler : MonoBehaviour
         return unit;
     }
 
-    public void TransferUnitToBase(Unit unit, Base newBase, Vector3 newBasePosition)
+    public void TransferToBase(Unit unit, Base newBase, Vector3 newBasePosition)
     {
         unit.AssignToBase(newBase);
         unit.Initialize(newBasePosition);
     }
 
-    public List<Unit> GetAllUnits()
+    public List<Unit> GetAll()
     {
         return _allUnits; 
     }
 
-    public int GetUnitCountForBase(Base baseRef)
+    public int GetCountForBase(Base baseRef)
     {
-        return _allUnits.Count(u => u.GetAssignedBase() == baseRef);
+        return _allUnits.Count(unit => unit.GetAssignedBase() == baseRef);
     }
 }

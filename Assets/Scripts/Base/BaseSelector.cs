@@ -27,7 +27,7 @@ public class BaseSelector : MonoBehaviour
                     _selectedBase.SetExpansionMode(false);
                 }
 
-                if (_unitHandler.GetUnitCountForBase(newBase) < 2)
+                if (_unitHandler.GetCountForBase(newBase) < 2)
                 {
                     Debug.Log("Нельзя выбрать");
                     _selectedBase = null;
@@ -46,7 +46,7 @@ public class BaseSelector : MonoBehaviour
         if (context.performed == false || _selectedBase == null)
             return;
 
-        if (_baseManager.IsBaseLimitReached())
+        if (_baseManager.IsLimitReached())
         {
             Debug.Log("[BaseSelector] Установка флагов заблокирована из-за лимита.");
             _selectedBase?.SetHighlight(false);
@@ -55,7 +55,7 @@ public class BaseSelector : MonoBehaviour
             return;
         }
 
-        if (_unitHandler.GetUnitCountForBase(_selectedBase) < 2)
+        if (_unitHandler.GetCountForBase(_selectedBase) < 2)
         {
             Debug.Log("[BaseSelector] Недостаточно юнитов для колонизации. Сброс выделения.");
 
@@ -78,6 +78,7 @@ public class BaseSelector : MonoBehaviour
             foreach (var col in nearBases)
             {
                 Base otherBase = col.GetComponent<Base>();
+
                 if (otherBase == null)
                     continue;
 

@@ -105,7 +105,6 @@ public class Unit : MonoBehaviour
         IsBusy = false;
         ReadyForNewTask = true;
         _mover.ClearTarget();
-        Debug.Log($"[Unit] {name} стал свободным. AssignedBase: {_assignedBase.name}");
         BecameIdle?.Invoke(this);
     }
 

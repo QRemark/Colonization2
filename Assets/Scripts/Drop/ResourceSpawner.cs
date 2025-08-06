@@ -17,7 +17,7 @@ public class ResourceSpawner : Spawner<Resource>
 
     private void Update()
     {
-        GenerateResourceOnInterval();
+        GenerateOnInterval();
     }
 
     public override void ReturnToPool(Resource resource)
@@ -26,18 +26,18 @@ public class ResourceSpawner : Spawner<Resource>
         base.ReturnToPool(resource);          
     }
 
-    private void GenerateResourceOnInterval()
+    private void GenerateOnInterval()
     {
         _timer += Time.deltaTime;
 
         if (_timer >= _spawnInterval)
         {
             _timer = 0f;
-            SpawnAndRegisterResource();
+            SpawnAndRegister();
         }
     }
 
-    private void SpawnAndRegisterResource()
+    private void SpawnAndRegister()
     {
         Vector3 position = GetRandomPosition();
         Resource resource = SpawnObject(position, _defaultRotation);
@@ -46,7 +46,7 @@ public class ResourceSpawner : Spawner<Resource>
         {
             resource.Activate(position);
             resource.OnCollected += ReturnToPool;
-            _resourceStorage.RegisterResource(resource);
+            _resourceStorage.Regist(resource);
         }
     }
 

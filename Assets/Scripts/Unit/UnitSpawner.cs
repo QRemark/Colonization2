@@ -7,10 +7,17 @@ public class UnitSpawner : Spawner<Unit>
     [SerializeField] private float _angleStepDegrees = 30f;
     [SerializeField] private float _yOffset = 0f;
 
-    private readonly List<Unit> _units = new();
+    private List<Unit> _units;
+    
     public IEnumerable<Unit> Units => _units;
 
-    public Unit SpawnUnit(Vector3 center)
+    protected override void Awake()
+    {
+        base.Awake();
+        _units = new List<Unit>();
+    }
+
+    public Unit CreateSingleUnit(Vector3 center)
     {
         int index = _units.Count;
         float angle = index * _angleStepDegrees * Mathf.Deg2Rad;

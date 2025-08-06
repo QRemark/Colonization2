@@ -14,7 +14,7 @@ public class ResourceStorage : MonoBehaviour
         _reservedResources = new List<Resource>();
     }
 
-    public void RegisterResource(Resource resource)
+    public void Regist(Resource resource)
     {
         if (_availableResources.Contains(resource) == false && _reservedResources.Contains(resource) == false)
         {
@@ -22,13 +22,13 @@ public class ResourceStorage : MonoBehaviour
         }
     }
 
-    public void UnregisterResource(Resource resource)
+    public void Unregist(Resource resource)
     {
         _availableResources.Remove(resource);
         _reservedResources.Remove(resource);
     }
 
-    public bool TryReserveResource(Resource resource)
+    public bool TryReserve(Resource resource)
     {
         if (_availableResources.Remove(resource))
         {

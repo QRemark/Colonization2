@@ -28,9 +28,7 @@ public class BaseFlow : MonoBehaviour
         _resourceUI.Initialize(_resourceCounter);
         _scanner.ResourcesUpdated += OnResourcesUpdated;
         _resourceCounter.CountChanged += _base.OnResourceCountChanged;
-
     }
-
 
     private void OnDestroy()
     {
@@ -58,7 +56,7 @@ public class BaseFlow : MonoBehaviour
             .Where(unit => unit.GetAssignedBase() == _base)
             .ToList();
 
-        _assigner.AssignTasks(ownUnits, _availableResources);
+        _assigner.Distribute(ownUnits, _availableResources);
     }
 
     private void CheckUnits()
@@ -79,9 +77,8 @@ public class BaseFlow : MonoBehaviour
             return; 
 
         _activeTasks.Remove(resource);
-        _resourceStorage.UnregisterResource(resource);
+        _resourceStorage.Unregist(resource);
         _resourceCounter.Increment();
         resource.Collect();
     }
-
 }

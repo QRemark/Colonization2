@@ -43,6 +43,7 @@ public class UnitMover : MonoBehaviour
             return;
 
         float distance = Vector3.Distance(_rigidbody.position, _targetPosition);
+
         if (distance < _arriveThreshold)
         {
             _hasTarget = false;

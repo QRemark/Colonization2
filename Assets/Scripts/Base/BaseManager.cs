@@ -19,7 +19,7 @@ public class BaseManager : MonoBehaviour
     }
 
 
-    public void RegisterBase(Base baseRef)
+    public void Register(Base baseRef)
     {
         if (_allBases.Contains(baseRef) == false)
             _allBases.Add(baseRef);
@@ -27,12 +27,12 @@ public class BaseManager : MonoBehaviour
 
     private void Start()
     {
-        CreateInitialBase(_initialBasePosition.position);
+        CreateInitial(_initialBasePosition.position);
     }
 
-    private void CreateInitialBase(Vector3 position)
+    private void CreateInitial(Vector3 position)
     {
-        Base baseComponent = _baseSpawner.SpawnBase(position);
+        Base baseComponent = _baseSpawner.Create(position);
         baseComponent.Init(
             _globalUnitHandler.GetComponent<UnitSpawner>(),
             _resourceStorage,
@@ -42,20 +42,20 @@ public class BaseManager : MonoBehaviour
 
         for (int i = 0; i < _initialUnitCount; i++)
         {
-            _globalUnitHandler.SpawnUnitForBase(position, baseComponent);
+            _globalUnitHandler.SpawnForBase(position, baseComponent);
         }
 
-        RegisterBase(baseComponent);
+        Register(baseComponent);
     }
 
-    public bool IsBaseLimitReached()
+    public bool IsLimitReached()
     {
         return _baseSpawner.IsLimitReached();
     }
 
-    public void CreateNewBase(Vector3 position, Unit builder)
+    public void CreateNew(Vector3 position, Unit builder)
     {
-        Base newBase = _baseSpawner.SpawnBase(position);
+        Base newBase = _baseSpawner.Create(position);
 
         if (newBase == null)
         {
@@ -70,8 +70,8 @@ public class BaseManager : MonoBehaviour
             this
         );
 
-        RegisterBase(newBase);
-        _globalUnitHandler.TransferUnitToBase(builder, newBase, position);
+        Register(newBase);
+        _globalUnitHandler.TransferToBase(builder, newBase, position);
     }
 
 }

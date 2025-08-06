@@ -47,6 +47,7 @@ public class Base : MonoBehaviour
 
         _unitExpansion.enabled = CanProduceUnits;
     }
+
     public void NotifyBuilderSent()
     {
         Debug.Log("[Base] Юнит отправлен, разрешаем производство во время расширения.");
@@ -58,6 +59,7 @@ public class Base : MonoBehaviour
     {
         _baseExpansion.SetFlag(position);
     }
+
     public void OnUnitSpawned(Unit unit)
     {
         unit.BecameIdle += HandleUnitBecameIdle;
@@ -72,9 +74,9 @@ public class Base : MonoBehaviour
             _baseExpansion.OnUnitIdleFromThisBase(unit);
         }
     }
+
     public void OnResourceCountChanged(int count)
     {
         _baseExpansion.OnResourceCountChanged(count);
     }
-
 }

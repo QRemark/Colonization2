@@ -7,7 +7,7 @@ public class BaseSpawner : Spawner<Base>
 
     private int _currentBaseCount = 0;
 
-    public Base SpawnBase(Vector3 position)
+    public Base Create(Vector3 position)
     {
         if (_currentBaseCount >= _initialSize)
         {

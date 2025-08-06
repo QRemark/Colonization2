@@ -25,7 +25,7 @@ public class UnitExpansion : MonoBehaviour
 
         Vector3 spawnPos = _base.transform.position;
 
-        if (_globalUnitHandler.TrySpawnUnitForBase(spawnPos, _base))
+        if (_globalUnitHandler.TryAddForBase(spawnPos, _base))
         {
             _counter.Decrement(_resourcesPerUnit);
         }

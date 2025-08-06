@@ -13,7 +13,7 @@ public class TaskAssigner : MonoBehaviour
         _resourceStorage = resourceStorage;
     }
 
-    public void AssignTasks(IEnumerable<Unit> units, List<Resource> availableResources)
+    public void Distribute(IEnumerable<Unit> units, List<Resource> availableResources)
     {
         foreach (Unit unit in units)
         {
@@ -39,7 +39,7 @@ public class TaskAssigner : MonoBehaviour
         if (accepted)
         {
             _activeTasks[closest] = unit;
-            _resourceStorage.TryReserveResource(closest);
+            _resourceStorage.TryReserve(closest);
         }
     }
 }
