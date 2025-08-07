@@ -7,9 +7,11 @@ public class CameraMover : MonoBehaviour
     [SerializeField] private Vector2 _limitZ = new Vector2(-500f, 500f);
     [SerializeField] private Transform _referenceTransform;
 
+    private Vector2 _defoultInput = Vector2.zero;
+
     public void ChangePosition(Vector2 input)
     {
-        if (input == Vector2.zero) 
+        if (input == _defoultInput) 
             return;
 
         Vector3 forward = _referenceTransform.forward;

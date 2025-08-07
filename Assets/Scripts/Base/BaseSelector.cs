@@ -72,7 +72,6 @@ public class BaseSelector : MonoBehaviour
         }
     }
 
-
     private void DeselectBase()
     {
         if (_selectedBase != null)

@@ -3,7 +3,7 @@
 public class Base : MonoBehaviour
 {
     [SerializeField] private BaseFlow _flow;
-    [SerializeField] private UnitExpansion _unitExpansion;
+    [SerializeField] private UnitProduction _unitProducion;
     [SerializeField] private BaseExpansion _baseExpansion;
     [SerializeField] private ResourceCounter _resourceCounter;
 
@@ -25,7 +25,7 @@ public class Base : MonoBehaviour
     {
         _flow.Init(unitSpawner, resourceStorage, this);
 
-        _unitExpansion.Init(this, _resourceCounter, globalUnitHandler);
+        _unitProducion.Init(this, _resourceCounter, globalUnitHandler);
         _baseExpansion.Init(this, _resourceCounter, globalUnitHandler, baseHandler);
     }
 
@@ -44,13 +44,13 @@ public class Base : MonoBehaviour
         if (isExpanding == false)
             _canProduceWhileExpanding = false;
 
-        _unitExpansion.enabled = CanProduceUnits;
+        _unitProducion.enabled = CanProduceUnits;
     }
 
     public void NotifyBuilderSent()
     {
         _canProduceWhileExpanding = true;
-        _unitExpansion.enabled = true;
+        _unitProducion.enabled = true;
     }
 
     public void SetFlag(Vector3 position)
@@ -68,6 +68,10 @@ public class Base : MonoBehaviour
         unit.BecameIdle -= HandleUnitBecameIdle;
     }
 
+    public void OnResourceCountChanged(int count)
+    {
+        _baseExpansion.OnResourceCountChanged(count);
+    }
 
     private void HandleUnitBecameIdle(Unit unit)
     {
@@ -75,10 +79,5 @@ public class Base : MonoBehaviour
         {
             _baseExpansion.OnUnitIdleFromThisBase(unit);
         }
-    }
-
-    public void OnResourceCountChanged(int count)
-    {
-        _baseExpansion.OnResourceCountChanged(count);
     }
 }

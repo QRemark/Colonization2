@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class UnitExpansion : MonoBehaviour
+public class UnitProduction : MonoBehaviour
 {
     [SerializeField] private int _resourcesPerUnit = 3;
 
@@ -10,7 +10,7 @@ public class UnitExpansion : MonoBehaviour
 
     private void Update()
     {
-        HandleExpansion();
+        Build();
     }
 
     public void Init(Base baseRef, ResourceCounter counter, GlobalUnitHandler unitHandler)
@@ -20,7 +20,7 @@ public class UnitExpansion : MonoBehaviour
         _globalUnitHandler = unitHandler;
     }
 
-    private void HandleExpansion()
+    private void Build()
     {
         if (_base.CanProduceUnits == false)
             return;

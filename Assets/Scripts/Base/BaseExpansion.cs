@@ -10,13 +10,12 @@ public class BaseExpansion : MonoBehaviour
     private bool _expanding = false;
     private bool _waitingForBuilder = false;
     private bool _isLocked = false;
+    private bool _slotReserved = false;
 
     private Base _base;
     private ResourceCounter _counter;
     private GlobalUnitHandler _unitHandler;
     private GlobalBaseHandler _baseHandler;
-
-    private bool _slotReserved = false;
 
     public bool IsLocked => _isLocked;
 
@@ -100,9 +99,7 @@ public class BaseExpansion : MonoBehaviour
     private Unit FindIdleBuilder()
     {
         return _unitHandler.GetAll()
-            .FirstOrDefault(unit =>
-                unit.GetAssignedBase() == _base &&
-                unit.ReadyForNewTask);
+            .FirstOrDefault(unit =>unit.GetAssignedBase() == _base && unit.ReadyForNewTask);
     }
 
     private void StartExpansion(Unit builder)
@@ -143,7 +140,6 @@ public class BaseExpansion : MonoBehaviour
 
         _base.SetExpansionMode(false);
     }
-
 
     private void OnDestroy()
     {

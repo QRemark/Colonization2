@@ -5342,7 +5342,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _flow: {fileID: 5224692039396698915}
-  _unitExpansion: {fileID: 2454854338420596181}
+  _unitProducion: {fileID: 2454854338420596181}
   _baseExpansion: {fileID: 3183777606730924507}
   _resourceCounter: {fileID: 4873944799968906170}
   _renderer: {fileID: 1519803052884691398}

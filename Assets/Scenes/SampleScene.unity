@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 44381815}
   - component: {fileID: 44381814}
   m_Layer: 0
-  m_Name: BaseHandler
+  m_Name: InputHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -628,7 +628,7 @@ GameObject:
   - component: {fileID: 1221934812}
   - component: {fileID: 1221934814}
   m_Layer: 0
-  m_Name: BaseManager
+  m_Name: BaseSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

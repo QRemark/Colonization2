@@ -6,6 +6,7 @@ public class BaseSpawner : Spawner<Base>
     [SerializeField] private float _spawnY = 12f;
     private Quaternion _defaultRotation = Quaternion.identity;
     private int _currentBaseCount = 0;
+    private int _defoultBaseCount = 0;
 
     public Base Create(Vector3 position)
     {
@@ -26,7 +27,7 @@ public class BaseSpawner : Spawner<Base>
     public override void ReturnToPool(Base obj)
     {
         base.ReturnToPool(obj);
-        _currentBaseCount = Mathf.Max(0, _currentBaseCount - 1);
+        _currentBaseCount = Mathf.Max(_defoultBaseCount, _currentBaseCount - 1);
     }
 
     public bool IsLimitReached() => _currentBaseCount >= _initialSize;
@@ -35,5 +36,4 @@ public class BaseSpawner : Spawner<Base>
     {
         return _initialSize;
     }
-
 }

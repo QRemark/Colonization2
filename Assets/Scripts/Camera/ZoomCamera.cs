@@ -5,6 +5,8 @@ public class ZoomCamera : MonoBehaviour
     [SerializeField] private float _zoomSpeed = 500f;
     [SerializeField] private float _minZoom = 50f;
     [SerializeField] private float _maxZoom = 150f;
+
+    private float _defoultInput  = 0f;
     
     private Camera _camera;
 
@@ -15,7 +17,7 @@ public class ZoomCamera : MonoBehaviour
 
     public void Zoom(float input)
     {
-        if (input == 0f)
+        if (input == _defoultInput)
             return;
 
         float zoomDelta = -input * _zoomSpeed * Time.deltaTime;
