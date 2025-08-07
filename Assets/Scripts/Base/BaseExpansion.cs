@@ -29,7 +29,8 @@ public class BaseExpansion : MonoBehaviour
 
     private void OnDestroy()
     {
-        _counter.CountChanged -= OnResourceCountChanged;
+        if (_counter != null)
+            _counter.CountChanged -= OnResourceCountChanged;
 
         if (_slotReserved)
             _baseHandler.ReleaseReservedSlot();
