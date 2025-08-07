@@ -39,8 +39,14 @@ public class BaseExpansion : MonoBehaviour
 
     public void SetFlag(Vector3 position)
     {
-        if (_isLocked || _slotReserved)
+        if (_isLocked)
             return;
+
+        if (_slotReserved)
+        {
+            _flagPlacer.PlaceFlag(position);
+            return;
+        }
 
         if (_baseHandler.TryReserveBaseSlot() == false)
             return;
