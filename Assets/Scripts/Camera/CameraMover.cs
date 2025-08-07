@@ -8,6 +8,7 @@ public class CameraMover : MonoBehaviour
     [SerializeField] private Transform _referenceTransform;
 
     private Vector2 _defoultInput = Vector2.zero;
+    private float _defoultDirectionY = 0f;
 
     public void ChangePosition(Vector2 input)
     {
@@ -17,8 +18,8 @@ public class CameraMover : MonoBehaviour
         Vector3 forward = _referenceTransform.forward;
         Vector3 right = _referenceTransform.right;
 
-        forward.y = 0f;
-        right.y = 0f;
+        forward.y = _defoultDirectionY;
+        right.y = _defoultDirectionY;
 
         forward.Normalize();
         right.Normalize();

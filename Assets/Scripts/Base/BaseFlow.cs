@@ -28,6 +28,17 @@ public class BaseFlow : MonoBehaviour
         _availableResources = new List<Resource>();
     }
 
+    private void OnDestroy()
+    {
+        _scanner.ResourcesUpdated -= OnResourcesUpdated;
+        _resourceCounter.CountChanged -= _base.OnResourceCountChanged;
+
+        UnsubscribeAllUnits();
+
+        _availableResources.Clear();
+        _activeTasks.Clear();
+    }
+
     public void Init(UnitSpawner unitSpawner, ResourceStorage resourceStorage, Base baseRef)
     {
         _unitSpawner = unitSpawner;
@@ -38,17 +49,6 @@ public class BaseFlow : MonoBehaviour
         _resourceUI.Initialize(_resourceCounter);
         _scanner.ResourcesUpdated += OnResourcesUpdated;
         _resourceCounter.CountChanged += _base.OnResourceCountChanged;
-    }
-
-    private void OnDestroy()
-    {
-        _scanner.ResourcesUpdated -= OnResourcesUpdated;
-        _resourceCounter.CountChanged -= _base.OnResourceCountChanged;
-
-        UnsubscribeAllUnits();
-
-        _availableResources.Clear();
-        _activeTasks.Clear();
     }
 
     private void OnResourcesUpdated(List<Resource> scannedResources)

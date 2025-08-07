@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class BaseSpawner : Spawner<Base>
@@ -29,8 +28,6 @@ public class BaseSpawner : Spawner<Base>
         base.ReturnToPool(obj);
         _currentBaseCount = Mathf.Max(_defoultBaseCount, _currentBaseCount - 1);
     }
-
-    public bool IsLimitReached() => _currentBaseCount >= _initialSize;
 
     public int GetMaxBaseCount()
     {

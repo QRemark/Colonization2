@@ -27,6 +27,14 @@ public class BaseExpansion : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        _counter.CountChanged -= OnResourceCountChanged;
+
+        if (_slotReserved)
+            _baseHandler.ReleaseReservedSlot();
+    }
+
     public void Init(Base baseRef, ResourceCounter counter, GlobalUnitHandler unitHandler, GlobalBaseHandler baseHandler)
     {
         _base = baseRef;
@@ -145,13 +153,5 @@ public class BaseExpansion : MonoBehaviour
         _slotReserved = false;
 
         _base.SetExpansionMode(false);
-    }
-
-    private void OnDestroy()
-    {
-        _counter.CountChanged -= OnResourceCountChanged;
-
-        if (_slotReserved)
-            _baseHandler.ReleaseReservedSlot();
     }
 }

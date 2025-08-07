@@ -10,7 +10,9 @@ public class GlobalBaseHandler : MonoBehaviour
     [SerializeField] private int _initialUnitCount = 3;
 
     private List<Base> _allBases;
+
     private int _reservedBaseSlots = 0;
+    private int _defoultReservedSlots = 0;
 
     private void Awake()
     {
@@ -33,7 +35,7 @@ public class GlobalBaseHandler : MonoBehaviour
 
     public void ReleaseReservedSlot()
     {
-        _reservedBaseSlots = Mathf.Max(0, _reservedBaseSlots - 1);
+        _reservedBaseSlots = Mathf.Max(_defoultReservedSlots, _reservedBaseSlots - 1);
     }
 
     public void ConfirmBaseCreated()

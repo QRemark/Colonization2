@@ -3,6 +3,7 @@ using UnityEngine;
 public class FlagPlacer : MonoBehaviour
 {
     [SerializeField] private GameObject _flagPrefab;
+
     private static readonly Quaternion _defaultRotation = Quaternion.identity;
 
     private GameObject _flagInstance;

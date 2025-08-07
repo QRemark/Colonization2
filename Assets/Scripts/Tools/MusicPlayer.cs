@@ -8,6 +8,7 @@ public class MusicPlayer : MonoBehaviour
     [SerializeField] private float _fadeDuration = 3f; 
     [SerializeField] private float _targetVolume = 1f; 
 
+    private float _progressTime = 0f;
     private float _defoultVolume = 0f;
     private AudioSource _audioSource;
 
@@ -29,7 +30,7 @@ public class MusicPlayer : MonoBehaviour
 
     private IEnumerator FadeIn()
     {
-        float progressTime = 0f;
+        float progressTime = _progressTime;
 
         while (progressTime < _fadeDuration)
         {

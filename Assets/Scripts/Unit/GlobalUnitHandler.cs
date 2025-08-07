@@ -60,7 +60,6 @@ public class GlobalUnitHandler : MonoBehaviour
         newBase.SubscribeToUnit(unit);
     }
 
-
     public List<Unit> GetAll()
     {
         return _allUnits; 

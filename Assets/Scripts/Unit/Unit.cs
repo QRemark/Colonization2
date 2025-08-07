@@ -51,6 +51,11 @@ public class Unit : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        _mover.OnArrived -= HandleArrived;
+    }
+
     public void Initialize(Vector3 position)
     {
         _basePosition = position;
@@ -116,10 +121,5 @@ public class Unit : MonoBehaviour
             _isBuildingBase = false;
 
         OnArrived?.Invoke(this);
-    }
-
-    private void OnDestroy()
-    {
-        _mover.OnArrived -= HandleArrived;
     }
 }

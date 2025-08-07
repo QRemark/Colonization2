@@ -25,18 +25,18 @@ public class CameraHandler : MonoBehaviour
         _cameraRotator.Rotate(_rotateInput);
     }
 
-    public void OnMove(InputAction.CallbackContext ctx)
+    public void OnMove(InputAction.CallbackContext context)
     {
-        _moveInput = ctx.ReadValue<Vector2>();
+        _moveInput = context.ReadValue<Vector2>();
     }
 
-    public void OnZoom(InputAction.CallbackContext ctx)
+    public void OnZoom(InputAction.CallbackContext context)
     {
-        _zoomInput = ctx.ReadValue<float>();
+        _zoomInput = context.ReadValue<float>();
     }
 
-    public void OnRotate(InputAction.CallbackContext ctx)
+    public void OnRotate(InputAction.CallbackContext context)
     {
-        _rotateInput = ctx.ReadValue<float>();
+        _rotateInput = context.ReadValue<float>();
     }
 }
