@@ -23,7 +23,7 @@ public class BaseExpansion : MonoBehaviour
     {
         if (_expanding && _flagPlacer.HasFlag)
         {
-            TryStartExpansion();
+            StartExpansion();
         }
     }
 
@@ -53,14 +53,14 @@ public class BaseExpansion : MonoBehaviour
 
         if (_slotReserved)
         {
-            _flagPlacer.PlaceFlag(position);
+            _flagPlacer.Place(position);
             return;
         }
 
-        if (_baseHandler.TryReserveBaseSlot() == false)
+        if (_baseHandler.TryReserveSlot() == false)
             return;
 
-        _flagPlacer.PlaceFlag(position);
+        _flagPlacer.Place(position);
         _expanding = true;
         _waitingForBuilder = false;
         _slotReserved = true;
@@ -68,11 +68,11 @@ public class BaseExpansion : MonoBehaviour
         _base.SetExpansionMode(true);
     }
 
-    public void OnUnitIdleFromThisBase(Unit unit)
+    public void OnUnitIdle(Unit unit)
     {
         if (_waitingForBuilder && _expanding && _flagPlacer.HasFlag)
         {
-            TryStartExpansion();
+            StartExpansion();
         }
     }
 
@@ -80,11 +80,11 @@ public class BaseExpansion : MonoBehaviour
     {
         if (_waitingForBuilder && _expanding && _flagPlacer.HasFlag)
         {
-            TryStartExpansion();
+            StartExpansion();
         }
     }
 
-    private void TryStartExpansion()
+    private void StartExpansion()
     {
         if (HasEnoughResources() == false)
         {
@@ -114,7 +114,7 @@ public class BaseExpansion : MonoBehaviour
     private Unit FindIdleBuilder()
     {
         return _unitHandler.GetAll()
-            .FirstOrDefault(unit =>unit.GetAssignedBase() == _base && unit.ReadyForNewTask);
+            .FirstOrDefault(unit =>unit.GetAssignedBase() == _base && unit.ReadyForNextTask);
     }
 
     private void StartExpansion(Unit builder)
@@ -122,7 +122,7 @@ public class BaseExpansion : MonoBehaviour
         Vector3 targetPos = _flagPlacer.FlagPosition.Value;
 
         builder.StartBaseBuildingTask(targetPos);
-        builder.OnArrived += BuildNewBase;
+        builder.OnArrived += Build;
 
         _isLocked = true;
         _expanding = false;
@@ -131,7 +131,7 @@ public class BaseExpansion : MonoBehaviour
         _base.NotifyBuilderSent();
     }
 
-    private void BuildNewBase(Unit unit)
+    private void Build(Unit unit)
     {
         if (_flagPlacer.HasFlag == false)
             return;
@@ -145,10 +145,10 @@ public class BaseExpansion : MonoBehaviour
             return;
         }
 
-        _baseHandler.CreateNew(targetPos, unit);
-        unit.OnArrived -= BuildNewBase;
+        _baseHandler.Create(targetPos, unit);
+        unit.OnArrived -= Build;
 
-        _flagPlacer.ClearFlag();
+        _flagPlacer.Clear();
         _expanding = false;
         _isLocked = false;
         _slotReserved = false;

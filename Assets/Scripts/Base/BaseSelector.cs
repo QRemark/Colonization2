@@ -23,7 +23,7 @@ public class BaseSelector : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance, _baseLayer) &&
             hit.collider.TryGetComponent(out Base newBase))
         {
-            DeselectBase();
+            Deselect();
 
             if (HasEnoughUnits(newBase) == false)
                 return;
@@ -41,13 +41,13 @@ public class BaseSelector : MonoBehaviour
 
         if (_baseHandler.IsLimitReached())
         {
-            DeselectBase();
+            Deselect();
             return;
         }
 
         if (HasEnoughUnits(_selectedBase) == false)
         {
-            DeselectBase();
+            Deselect();
             return;
         }
 
@@ -59,7 +59,7 @@ public class BaseSelector : MonoBehaviour
 
             if (IsTooCloseToOtherBases(flagPosition))
             {
-                DeselectBase();
+                Deselect();
                 return;
             }
 
@@ -72,7 +72,7 @@ public class BaseSelector : MonoBehaviour
         }
     }
 
-    private void DeselectBase()
+    private void Deselect()
     {
         if (_selectedBase != null)
         {

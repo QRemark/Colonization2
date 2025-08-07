@@ -25,7 +25,7 @@ public class UnitSpawner : Spawner<Unit>
         _units.Remove(unit);
     }
 
-    public Unit CreateSingleUnit(Vector3 center)
+    public Unit Create(Vector3 center)
     {
         int index = _units.Count;
         float angle = index * _angleStepDegrees * Mathf.Deg2Rad;

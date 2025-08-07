@@ -77,7 +77,7 @@ public class Base : MonoBehaviour
     {
         if (_isInExpansionMode)
         {
-            _baseExpansion.OnUnitIdleFromThisBase(unit);
+            _baseExpansion.OnUnitIdle(unit);
         }
     }
 }

@@ -17,14 +17,14 @@ public class TaskAssigner : MonoBehaviour
     {
         foreach (Unit unit in units)
         {
-            if (unit.IsBusy == false && unit.ReadyForNewTask)
+            if (unit.IsBusy == false && unit.ReadyForNextTask)
             {
-                TryAssignTaskToUnit(unit, availableResources);
+                AssignTaskToUnit(unit, availableResources);
             }
         }
     }
 
-    private void TryAssignTaskToUnit(Unit unit, List<Resource> availableResources)
+    private void AssignTaskToUnit(Unit unit, List<Resource> availableResources)
     {
         Resource closest = availableResources
             .Where(resource => resource != null && _activeTasks.ContainsKey(resource) == false)

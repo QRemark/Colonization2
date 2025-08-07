@@ -21,7 +21,7 @@ public class GlobalUnitHandler : MonoBehaviour
         if (unitCount >= _maxUnitsPerBase)
             return false;
 
-        Unit unit = _unitSpawner.CreateSingleUnit(position);
+        Unit unit = _unitSpawner.Create(position);
 
         if (unit == null)
             return false;
@@ -35,7 +35,7 @@ public class GlobalUnitHandler : MonoBehaviour
 
     public Unit SpawnForBase(Vector3 position, Base ownerBase)
     {
-        Unit unit = _unitSpawner.CreateSingleUnit(position);
+        Unit unit = _unitSpawner.Create(position);
 
         if (unit != null)
         {

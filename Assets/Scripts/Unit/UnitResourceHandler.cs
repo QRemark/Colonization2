@@ -8,7 +8,7 @@ public class UnitResourceHandler : MonoBehaviour
     private float _defoulktOffcet = 0;
     private Resource _carriedResource;
 
-    public void SetCarriedResource(Resource resource)
+    public void SetCarried(Resource resource)
     {
         _carriedResource = resource;
     }

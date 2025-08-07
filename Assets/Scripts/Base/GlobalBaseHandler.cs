@@ -24,9 +24,9 @@ public class GlobalBaseHandler : MonoBehaviour
         CreateInitial(_initialBasePosition.position);
     }
 
-    public bool TryReserveBaseSlot()
+    public bool TryReserveSlot()
     {
-        if (GetTotalPlannedBaseCount() >= _baseSpawner.GetMaxBaseCount())
+        if (GetTotalPlannedCount() >= _baseSpawner.GetMaxBaseCount())
             return false;
 
         _reservedBaseSlots++;
@@ -38,12 +38,12 @@ public class GlobalBaseHandler : MonoBehaviour
         _reservedBaseSlots = Mathf.Max(_defoultReservedSlots, _reservedBaseSlots - 1);
     }
 
-    public void ConfirmBaseCreated()
+    public void ConfirmCreated()
     {
         ReleaseReservedSlot(); 
     }
 
-    public int GetTotalPlannedBaseCount()
+    public int GetTotalPlannedCount()
     {
         return _allBases.Count + _reservedBaseSlots;
     }
@@ -56,12 +56,12 @@ public class GlobalBaseHandler : MonoBehaviour
 
     public bool IsLimitReached()
     {
-        return GetTotalPlannedBaseCount() >= _baseSpawner.GetMaxBaseCount();
+        return GetTotalPlannedCount() >= _baseSpawner.GetMaxBaseCount();
     }
 
-    public void CreateNew(Vector3 position, Unit builder)
+    public void Create(Vector3 position, Unit builder)
     {
-        Base newBase = InitializeBase(position);
+        Base newBase = Initialize(position);
 
         if (newBase == null)
         {
@@ -70,12 +70,12 @@ public class GlobalBaseHandler : MonoBehaviour
         }
 
         _globalUnitHandler.TransferToBase(builder, newBase, position);
-        ConfirmBaseCreated(); 
+        ConfirmCreated(); 
     }
 
     private void CreateInitial(Vector3 position)
     {
-        Base initialBase = InitializeBase(position);
+        Base initialBase = Initialize(position);
 
         if (initialBase == null)
             return;
@@ -86,7 +86,7 @@ public class GlobalBaseHandler : MonoBehaviour
         }
     }
 
-    private Base InitializeBase(Vector3 position)
+    private Base Initialize(Vector3 position)
     {
         Base baseComponent = _baseSpawner.Create(position);
 

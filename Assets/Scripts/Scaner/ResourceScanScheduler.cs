@@ -35,7 +35,7 @@ public class ResourceScanScheduler : MonoBehaviour
 
     private void PerformScan()
     {
-        List<Resource> scannedResources = _detector.DetectNearbyResources();
+        List<Resource> scannedResources = _detector.DetectNearby();
         ResourcesUpdated?.Invoke(scannedResources);
     }
 }

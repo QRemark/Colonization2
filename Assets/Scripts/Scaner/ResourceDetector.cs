@@ -6,7 +6,7 @@ public class ResourceDetector : MonoBehaviour
     [SerializeField] private float _scanRadius = 110;
     [SerializeField] private ScanEffect _scanEffect;
 
-    public List<Resource> DetectNearbyResources()
+    public List<Resource> DetectNearby()
     {
         _scanEffect?.Play(_scanRadius);
 

@@ -16,7 +16,7 @@ public class Unit : MonoBehaviour
 
     private bool _isBuildingBase = false;
 
-    public bool ReadyForNewTask { get; private set; }
+    public bool ReadyForNextTask { get; private set; }
     public bool IsBusy { get; private set; }
 
     public event Action<Unit, Resource> ResourceDelivered;
@@ -60,14 +60,14 @@ public class Unit : MonoBehaviour
     {
         _basePosition = position;
         IsBusy = false;
-        ReadyForNewTask = true;
+        ReadyForNextTask = true;
     }
 
     public void StartBaseBuildingTask(Vector3 position)
     {
         _isBuildingBase = true;
         IsBusy = true;
-        ReadyForNewTask = false;
+        ReadyForNextTask = false;
 
         _targetResource = null;
         _resourceHandler.ClearCarryState();
@@ -82,11 +82,11 @@ public class Unit : MonoBehaviour
         _targetResource = resource;
         _mover.SetTarget(resource.transform.position);
 
-        _resourceHandler.SetCarriedResource(null);
+        _resourceHandler.SetCarried(null);
         _resourceHandler.ClearCarryState();
 
         IsBusy = true;
-        ReadyForNewTask = false;
+        ReadyForNextTask = false;
 
         return true;
     }
@@ -110,7 +110,7 @@ public class Unit : MonoBehaviour
     {
         _targetResource = null;
         IsBusy = false;
-        ReadyForNewTask = true;
+        ReadyForNextTask = true;
         _mover.ClearTarget();
         BecameIdle?.Invoke(this);
     }
